@@ -133,6 +133,11 @@ dmypy.json
 # model and data artifacts
 data/*
 model/*
+mlruns/*
+
+!mlruns/.gitkeep
+!model/.gitkeep
+!data/.gitkeep
 
 # command history
 .bash_history
