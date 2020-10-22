@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+BRANCH="$(echo $( git rev-parse --abbrev-ref HEAD) | tr '[:upper:]' '[:lower:]')"
+DOCKER_IMAGE="sad_final_project:${BRANCH}"
+
+declare -a valid_arguments=( "build" "start" "enter" "jupyter" "stop" )
+[[ $valid_arguments =~ (^|[[:space:]])$1($|[[:space:]]) ]] \
+	&& echo 'yes' || echo 'Must be one of the following arguments: build, start, enter, jupyter, stop'
+
+if [ $# -gt 1 ]
+then
+	echo 'Only takes one argument' 
+	exit 1
+fi
+
+# build docker image
+if [ $1 == 'build' ]
+then 
+	docker build -t ${DOCKER_IMAGE} .
+	exit 0
+fi
+
+# start Docker session
+# mount repo into home directory
+# port forward for Jupyter notebook
+# store container ID in text file
+if [ $1 == 'start' ]
+then 
+	echo 'Starting Docker container'
+	docker run -itd \
+	  -v $(pwd):/root/ \
+	  -p 8889:8888 \
+	  ${DOCKER_IMAGE} \
+	  > docker_id.txt
+	cat docker_id.txt
+	exit 0
+fi
+
+# enter running Docker session with interactive shell
+# using text file
+if [ $1 == 'enter' ]
+then
+	docker exec -it $(cat docker_id.txt) /bin/bash
+	exit 0
+fi
+
+# start Jupyter notebook in Docker
+if [ $1 == 'jupyter' ]
+then 
+	echo 'Navigate to localhost:8889 to access the Jupyter notebook'
+	docker exec -it $(cat docker_id.txt) jupyter-notebook \
+		--ip 0.0.0.0 \
+		--no-browser \
+		--allow-root \
+		--NotebookApp.token='' \
+		--NotebookApp.password=''
+	exit 0
+fi
+
+if [ $1 == 'stop' ]
+then 
+	docker stop $(cat docker_id.txt)
+	rm docker_id.txt
+	exit 0
+fi
