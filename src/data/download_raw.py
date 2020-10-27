@@ -3,7 +3,7 @@ from pydrive.drive import GoogleDrive
 # import sys
 
 gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
+gauth.CommandLineAuth()
 drive = GoogleDrive(gauth)
 
 file_list = drive.ListFile({'q':"'1hO0_OIbRYuxdHRhwWxrxnWQc4LPDSs1r' in parents and trashed=False"}).GetList()
