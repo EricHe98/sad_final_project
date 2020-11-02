@@ -1,6 +1,7 @@
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
-# import sys
+# see https://cloud.google.com/docs/authentication/getting-started for 
+# setting up credentials.json which must be renamed to client_secrets.json
 
 gauth = GoogleAuth()
 gauth.CommandLineAuth()
