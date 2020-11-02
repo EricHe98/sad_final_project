@@ -129,3 +129,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# model and data artifacts
+data/*
+model/*
+mlruns/*
+
+!mlruns/.gitkeep
+!model/.gitkeep
+!data/.gitkeep
+
+# command history
+.bash_history
+.python_history
+.local
