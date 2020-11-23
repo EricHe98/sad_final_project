@@ -35,6 +35,23 @@ then
 	exit 0
 fi
 
+# start Docker session
+# mount repo into home directory
+# port forward for Jupyter notebook
+# store container ID in text file
+if [ $1 == 'start_prince' ]
+then 
+	echo 'Starting Docker container'
+	docker run -itd \
+	  -v $(pwd):/root/ \
+	  -v /scratch/work/js11133/sad_data/:/root/data/ \
+	  -p 8889:8888 \
+	  ${DOCKER_IMAGE} \
+	  > docker_id.txt
+	cat docker_id.txt
+	exit 0
+fi
+
 # enter running Docker session with interactive shell
 # using text file
 if [ $1 == 'enter' ]
