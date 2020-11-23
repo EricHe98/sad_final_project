@@ -194,6 +194,7 @@ def ndcg(df, groupby, ranker, label='label', reverse=False, k=10, dropna=False):
     -----------
     NDCG@k: Series with each entry a search request
     """
+    df = df[[groupby, ranker, label]]
     if reverse:
         ndcg_scores = df.groupby(groupby)\
             .apply(lambda df: ndcg_score(df[label].tolist(),
@@ -231,6 +232,7 @@ def verify_qids(df, qids):
 
 def tau(df, groupby, a, b):
     from scipy.stats import weightedtau
+    df = df[[groupby, a, b]]
     # drop all search requests with only 1 row
     # as 1-row groupby will cause weightedtau to crash the kernel
     counts = df[groupby].value_counts()

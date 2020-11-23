@@ -142,7 +142,7 @@
     {
       "name": "display_rank",
       "type": "int",
-      "train": false,
+      "train": true,
       "description": "Default sort rank"
     },
     {
@@ -258,12 +258,6 @@
       "type": "int",
       "train": true,
       "description": "Number of adults getting booked"
-    },
-    {
-      "name": "number_of_children",
-      "type": "int",
-      "train": true,
-      "description": "Number of children getting booked"
     },
     {
       "name": "srq_latitude",
