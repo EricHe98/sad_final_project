@@ -20,18 +20,19 @@ import argparse
 
 # You can type `python3 SCRIPT_NAME --help` and argparse will auto-generate 
 # documentation of what arguments the script accepts
-parser = argparse.ArgumentParser(description='Train ALS model.')
-parser.add_argument('run_type', choices=['small_100', 'small_all', 'full'],
-    help='type of run (small_100, small_all, all) to be included in MLFlow name')
-parser.add_argument('data_path', type=str, 
-    help='Path to train, val, test sets')
+parser = argparse.ArgumentParser()
+parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
+    help='which dataset to train the model (small_100, small_all, all) to be included in MLFlow name')
+parser.add_argument('--split', choices=['train', 'val', 'test'], default='train',
+    help='which split of the dataset to train on (train, val, test)')
 
 args = parser.parse_args()
+data_path = 'data/raw'
 
 def __main__():
     sc = SparkContext('local[*]')
     spark = SparkSession(sc)
-    data = spark.read.parquet(os.path.join(args.data_path, 'train'))\
+    data = spark.read.parquet(os.path.join(data_path, args.dataset, args.split))\
         .select('user_id', 'hotel_id', 'label')\
         .where(col('user_id').isNotNull())\
         .where(col('label') > 0)
@@ -48,7 +49,7 @@ def __main__():
     # you can alternatively just use `mlflow.start_run(blah)` to start
     # and `mlflow.end_run()` to end
     # Every model train should have its own MLFlow run
-    with mlflow.start_run(run_name='{}_als'.format(args.run_type)):
+    with mlflow.start_run(run_name='als'):
         # MLFlow assigns a run_id to every model train
         # We need to hang onto it for the prediction and evaluation steps
         run_id = mlflow.active_run().info.run_id
@@ -58,8 +59,11 @@ def __main__():
         # I would like us to log at least three things for training: run_type, model_name,
         # and training_time. You have wide latitude to choose model_name; try to keep
         # model_name the same for models with the same hyperparameters.
-        mlflow.log_param('run_type', args.run_type)
+        mlflow.log_param('dataset', args.dataset)
+        mlflow.log_param('train_split', args.split)
         mlflow.log_param('model_name', 'ALS')
+        mlflow.log_param('run_id', run_id)
+        
         als = ALS()\
             .setUserCol('user_id_int')\
             .setRatingCol('label')\
