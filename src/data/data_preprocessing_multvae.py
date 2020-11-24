@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 import pandas as pd
 import numpy as np
 from scipy import sparse
@@ -10,7 +11,7 @@ import torch.sparse
 
 class HotelDataset(Dataset):
 
-    def __init__(self, data_path = None):
+    def __init__(self, data_path = None, dict_path = None):
         """
         Args
 
@@ -18,17 +19,31 @@ class HotelDataset(Dataset):
         """
         if data_path is None:
             raise ValueError('Please specify data_path')
-        _ , ext = os.path.splitext(data_path)
+        if dict_path is None:
+            raise ValueError('Need path of hashes')
         
+        _ , ext = os.path.splitext(data_path)
         if ext != 'csv':
             raise ValueError('Incorrect File to upload')
+        _, ext2 = os.path.splitext(dict_path)
+        if ext2 != 'json':
+            raise ValueError('Incorrect File to use as indicies')
         self.data_sparse = pd.read_csv(data_path)
+
+
+        with open(os.path.join(dict_path, 'user_hash.json'), 'r') as fp:
+            self.user_id_indexed = json.load(fp)
+
+        with open(os.path.join(dict_path, 'hotel_hash.json'), 'r') as fp:
+            self.hotel_id_indexed = json.load(fp)
+
         self.sparse_index = torch.LongTensor([[data_sparse.user_id, data_sparse.hotel_id]])
         self.sparse_value = torch.LongTensor([[data_sparse.labels]])
+
         self.interactions = torch.sparse.FloatTensor(sparse_index,
-                                                            sparse_value,
-                                                            torch.size([len(data_sparse.user_id), len(data_sparse.hotel_id)]
-                                                            )).to_dense()
+                                                    sparse_value,
+                                                    torch.size([len(user_id_indexed), len(hotel_id_indexed)]
+                                                    )).to_dense()
         def __len__(self):
             return len(self.data_sparse)
 
@@ -75,7 +90,7 @@ def read_parquet(data_path, num_partitions: None, randomize = True, verbose = Tr
     return data
 
 def read_args(input_list):
-    if len(input_list) != 4:
+    if len(input_list) != 5:
         raise ValueError("Run with arguments data_path, output_path")
     
     if os.path.isdir(input_list[1]):
@@ -88,15 +103,37 @@ def read_args(input_list):
     else:
         raise ValueError("Path for output file does not exist")
 
-    if input_list[3] == 'train' or input_list[3] == 'val' or input_list[3] == 'test':
+    make_dict = True if input_list[3] == 'True' else False
+
+    if input_list[4] == 'None':
+        train_val_test = None
+    elif input_list[4] == 'train' or input_list[4] == 'val' or input_list[4] == 'test':
         train_val_test = input_list[3]
     else:
         raise ValueError("Specify train, test or val")
 
-    return data_path, output_path, train_val_test
+    return data_path, output_path, make_dict, train_val_test
 
 if __name__ == "__main__":
-    (data_path, output_path, train_val_test) = read_args(sys.argv)
+    #parser = argparse.ArgumentParser(description= 'Process Set for input into MultVAE')
+    #parser.add_argument('--data_path', 
+    #                    type = str, 
+    #                    default = None,
+    #                    help = 'Directory Location of dataset to be processed')
+    #parser.add_argument('--output_path',
+    #                    type = str,
+    #                    default = None,
+    #                    help = 'Location to save processed data')
+    #parser.add_argument('--make_dict',
+    #                    type = bool,
+    #                    default = False,
+    #                    help = 'Make hash tables for users and hotels')
+    #parser.add_argument('--train_val_test',
+    #                    type = str,
+    #                    default = 'train',
+    #                    help = 'which dataset to process')
+    #args = parser.parse_args()
+    (data_path, output_path, make_dict, train_val_test) = read_args(sys.argv)
     data = read_parquet(data_path, 
                         num_partitions = None,
                         randomize = False,
@@ -106,7 +143,7 @@ if __name__ == "__main__":
     data = data.dropna(subset = ['user_id'])
     data.user_id = data.user_id - 10000000000
 
-    if train_val_test == 'train':
+    if make_dict:
         unique_users = data.user_id.unique()
         unique_hotels = data.hotel_id.unique() 
 
@@ -124,6 +161,7 @@ if __name__ == "__main__":
             json.dump({str(key): value for key, value in hotel_id_indexed.items()},
                 fp,
                 sort_keys=True)
+        print('Finished hashing indicies')
 
     else: 
         with open(os.path.join(output_path, 'user_hash.json'), 'r') as fp:
@@ -132,15 +170,16 @@ if __name__ == "__main__":
         with open(os.path.join(output_path, 'hotel_hash.json'), 'r') as fp:
             hotel_id_indexed = json.load(fp)
 
-    user_hashed = data.user_id.apply(lambda x: user_id_indexed[x])
-    hotel_hashed = data.hotel_id.apply(lambda x: hotel_id_indexed[x])
+        user_hashed = data.user_id.apply(lambda x: user_id_indexed[x])
+        hotel_hashed = data.hotel_id.apply(lambda x: hotel_id_indexed[x])
     
-    final_reindexed_data = pd.DataFrame(data = {'user_id' : user_hashed, 
-                                                'hotel_id':hotel_hashed, 
+        final_reindexed_data = pd.DataFrame(data = {'user_id' : user_hashed, 
+                                                        'hotel_id':hotel_hashed, 
                                                 'label': data.label},
-                                        columns = ['user_id', 'hotel_id', 'label'] )
+                                            columns = ['user_id', 'hotel_id', 'label'] )
 
-    final_reindexed_data.to_csv(os.path.join(output_path, 'final_reindex_{}.csv'.format(train_val_test)), index = False)
+        final_reindexed_data.to_csv(os.path.join(output_path, 'final_reindex_{}.csv'.format(train_val_test)), index = False)
+        print('Finished Reindexing {} Data'.format(train_val_test))
 
 
 
