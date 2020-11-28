@@ -4,7 +4,7 @@ import torch.nn.functional as f
 import numpy as numpy
 
 class MultVAE_encoder(nn.module):
-	def __init(self, 
+	def __init__(self, 
 				item_dim: int, 
 				hidden_dim = 600, 
 				latent_dim = 200, 
@@ -37,7 +37,7 @@ class MultVAE_encoder(nn.module):
 		return mu, logvar
 		
 class MultVAE_decoder(nn.module):
-	def __init(self, item_dim, hidden_dim = 600, latent_dim = 200, n_hidden_layers = 1):
+	def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_hidden_layers = 1):
 		self.item_dim = item_dim
 		self.latent_dim = latent_dim
 		self.first_layer = nn.Linear(in_features = latent_dim, out_features = hidden_dim)
@@ -89,8 +89,6 @@ class MultVae(nn.module):
     	z = reparamaterize(enc_mu, enc_logvar)
     	items = self.decoder(z)
     	return items
-
-
 
 def VAE_loss_function(x_hat, x, mu, logvar, beta = 1.00):
 	bce = f.binary_cross_entropy(x_hat, x)
