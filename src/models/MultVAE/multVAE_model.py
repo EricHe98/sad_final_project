@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as f
 import numpy as numpy
 
-class MultVAE_encoder(nn.module):
+class MultVAE_encoder(nn.Module):
 	def __init__(self, 
 				item_dim: int, 
 				hidden_dim = 600, 
@@ -36,7 +36,7 @@ class MultVAE_encoder(nn.module):
 
 		return mu, logvar
 		
-class MultVAE_decoder(nn.module):
+class MultVAE_decoder(nn.Module):
 	def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_hidden_layers = 1):
 		self.item_dim = item_dim
 		self.latent_dim = latent_dim
@@ -61,7 +61,7 @@ class MultVAE_decoder(nn.module):
 		return items
 
 
-class MultVae(nn.module):
+class MultVae(nn.Module):
 	def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_enc_hidden_layers = 1, n_dec_hidden_layers = 1, dropout = 0.5):
 		self.encoder = MultVAE_encoder(
 										item_dim = item_dim,
