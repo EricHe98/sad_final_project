@@ -134,16 +134,14 @@ if __name__ == "__main__":
     #                    help = 'which dataset to process')
     #args = parser.parse_args()
     (data_path, output_path, make_dict, train_val_test) = read_args(sys.argv)
-    data = read_parquet(data_path, 
-                        num_partitions = None,
-                        randomize = False,
-                        verbose = True,
-                        columns = ['hotel_id', 'user_id','label'])
-
-    data = data.dropna(subset = ['user_id'])
-    data.user_id = data.user_id - 10000000000
 
     if make_dict:
+        data = read_parquet(data_path, 
+                num_partitions = None,
+                randomize = False,
+                verbose = True,
+                columns = ['hotel_id','user_id','label'])
+
         unique_users = data.user_id.unique()
         unique_hotels = data.hotel_id.unique() 
 
@@ -162,24 +160,41 @@ if __name__ == "__main__":
                 fp,
                 sort_keys=True)
         print('Finished hashing indicies')
-
-    else: 
-        with open(os.path.join(output_path, 'user_hash.json'), 'r') as fp:
-            user_id_indexed = json.load(fp)
-
-        with open(os.path.join(output_path, 'hotel_hash.json'), 'r') as fp:
-            hotel_id_indexed = json.load(fp)
-
-        user_hashed = data.user_id.apply(lambda x: user_id_indexed[x])
-        hotel_hashed = data.hotel_id.apply(lambda x: hotel_id_indexed[x])
     
-        final_reindexed_data = pd.DataFrame(data = {'user_id' : user_hashed, 
-                                                        'hotel_id':hotel_hashed, 
-                                                'label': data.label},
-                                            columns = ['user_id', 'hotel_id', 'label'] )
+    else:
+        data = read_parquet(data_path, 
+                        num_partitions = None,
+                        randomize = False,
+                        verbose = True,
+                        columns = ['search_result_id','search_request_id', 'hotel_id',
+                                    'user_id','label', 'check_in', 'check_out',
+                                    'reward_program_hash', 'advance_purchase_days',
+                                    'number_of_nights', 'number_of_rooms', 'number_of_adults',
+                                    'srq_latitude', 'srq_longitude', 'check_in_weekday',
+                                    'check_out_weekday', 'srq_weekhour', 'weekday_travel',
+                                    'weekend_travel'])
+        data.check_in = pd.to_datetime(df['check_in'],yearfirst=True)
+        data.check_out = pd.to_datetime(df['check_out'],yearfirst=True)
 
-        final_reindexed_data.to_csv(os.path.join(output_path, 'final_reindex_{}.csv'.format(train_val_test)), index = False)
-        print('Finished Reindexing {} Data'.format(train_val_test))
+    data = data.dropna(subset = ['user_id'])
+    data.user_id = data.user_id - 1e10
+
+    with open(os.path.join(output_path, 'user_hash.json'), 'r') as fp:
+        user_id_indexed = json.load(fp)
+
+    with open(os.path.join(output_path, 'hotel_hash.json'), 'r') as fp:
+        hotel_id_indexed = json.load(fp)
+
+    user_hashed = data.user_id.apply(lambda x: user_id_indexed[x])
+    hotel_hashed = data.hotel_id.apply(lambda x: hotel_id_indexed[x])
+    
+    final_reindexed_data = pd.DataFrame(data = {'user_id' : user_hashed, 
+                                                'hotel_id':hotel_hashed, 
+                                                'label': data.label},
+                                        columns = ['user_id', 'hotel_id', 'label'] )
+
+    final_reindexed_data.to_csv(os.path.join(output_path, 'final_reindex_{}.csv'.format(train_val_test)), index = False)
+    print('Finished Reindexing {} Data'.format(train_val_test))
 
 
 
