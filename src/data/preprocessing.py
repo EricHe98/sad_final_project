@@ -1,11 +1,47 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as f
-import numpy as numpy
-import models.MultVAE.multVAE_model 
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder
+import sys
+import os
+import json
+
+def read_parquet(data_path, num_partitions: None, randomize = True, verbose = True, columns = ['hotel_id', 'user_id','label']):
+    files = os.listdir(data_path)
+    if randomize:
+        random.shuffle(files)
+    
+    if num_partitions is None:
+        num_partitions = len(files)
+    
+    data = []
+    num_reads = 0
+    for file_path in files:
+        if num_reads >= num_partitions:
+            if verbose:
+                print('Finished reading {} .parquet Files'.format(num_partitions))
+            break
+        
+        _ , ext = os.path.splitext(file_path)
+        
+        if ext == '.parquet':
+            fp = os.path.join(data_path, file_path)
+            data.append(pd.read_parquet(os.path.join(data_path, file_path), columns = columns))
+            
+            if verbose:
+                print('Reading in data of shape {} from {}'.format(data[-1].shape, fp))
+            
+            num_reads += 1
+        else: 
+            continue
+    data = pd.concat(data, axis=0)
+    
+    if verbose:
+        print('Total dataframe of shape {}'.format(data.shape))
+    
+    return data
 
 
-def df_conversions(df):
+def df_conversions(df,user_hash_json_path,hotel_hash_json_path):
     '''
     IMPORTANT!!
     1) Adds a hotel_index column, this is assigns each hotel_id a number from 0 to len(hotel_id)-1. This index
@@ -15,13 +51,30 @@ def df_conversions(df):
     2) Drops users with no user_id (aka, anonymous/first time users)
     3) subtracts 1e^10 from user_id (ask eric why)
     4) converts date time strings into pandas datetime objects
+    5) Applies hashing for the user ids and hotel ids
     '''
-    hotel_id_to_hotel_index = dict((hotel_id, i) for (i, hotel_id) in enumerate(df['hotel_id'].unique()))
-    df['hotel_index']= df['hotel_id'].map(hotel_id_to_hotel_index)
-    df.drop(df.loc[df['user_id'].isna()].index, inplace=True)
+    
+    df.dropna(subset=['user_id'],inplace=True)
     df['user_id'] = df['user_id'] - 1e10
     df['check_in'] = pd.to_datetime(df['check_in'],yearfirst=True)
     df['check_out'] = pd.to_datetime(df['check_out'],yearfirst=True)
+    df['label'] = (df['label']>0).astype(int)
+    df['user_id'] = df['user_id'].astype(str)
+    df['search_request_id'] = df['search_request_id'].astype(str)
+    df['hotel_id'] = df['hotel_id'].astype(str)
+    
+    with open(user_hash_json_path, 'r') as fp:
+        user_id_indexed = json.load(fp)
+
+    with open(hotel_hash_json_path, 'r') as fp:
+        hotel_id_indexed = json.load(fp)
+    
+    user_hashed = df.user_id.apply(lambda x: user_id_indexed[x])
+    hotel_hashed = df.hotel_id.apply(lambda x: hotel_id_indexed[x])
+    
+    df['user_id'] = user_hashed
+    df['hotel_id'] = hotel_hashed
+    
     return df
 
 def create_user_id_to_query_struct_dict(df):
@@ -58,8 +111,8 @@ def create_query_struct_for_user(df,user_id):
     for sr_id in unique_search_ids_per_user:
         # Select only entries for each search request
         df_sr_user_id = df_user_id[df_user_id['search_request_id']==sr_id] 
-        # Create a dict of {hotel_index:label}
-        interaction_sparse_vec = pd.Series(df_sr_user_id['label'].values,index=df_sr_user_id['hotel_index']).to_dict()
+        # Create a dict of {hotel_id:label}, !!hotel id's should be hashed at this point
+        interaction_sparse_vec = pd.Series(df_sr_user_id['label'].values,index=df_sr_user_id['hotel_id']).to_dict()
         # Add it to vector
         interaction_vecs_per_query.append(interaction_sparse_vec)
     
