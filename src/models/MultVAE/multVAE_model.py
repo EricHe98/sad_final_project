@@ -88,7 +88,7 @@ class MultVae(nn.Module):
     	enc_mu, enc_logvar = self.encoder(x)
     	z = reparamaterize(enc_mu, enc_logvar)
     	items = self.decoder(z)
-    	return items
+    	return enc_mu, enc_logvar, items
 
 def VAE_loss_function(x_hat, x, mu, logvar, beta = 1.00):
 	bce = f.binary_cross_entropy(x_hat, x)
