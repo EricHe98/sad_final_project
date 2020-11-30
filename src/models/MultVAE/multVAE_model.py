@@ -10,10 +10,11 @@ class MultVAE_encoder(nn.Module):
                 latent_dim = 200, 
                 n_hidden_layers = 1, 
                 dropout = 0.5,
-                nonlinearity = nn.Tanh()):
+                nonlinearity = nn.Tanh):
+        super(MultVAE_encoder, self).__init__()
         self.item_dim = item_dim
         self.latent_dim = latent_dim
-        self.nonlinearity = nonlinearity
+        self.nonlinearity = nn.Tanh()
         self.layers = nn.Sequential()
         self.layers.add_module("input_dropout", nn.Dropout(dropout))
         self.layers.add_module("linear_enc_1",
@@ -37,11 +38,13 @@ class MultVAE_encoder(nn.Module):
         return mu, logvar
         
 class MultVAE_decoder(nn.Module):
-    def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_hidden_layers = 1):
+    def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_hidden_layers = 1,nonlinearity=nn.Tanh):
+        super(MultVAE_decoder, self).__init__()
         self.item_dim = item_dim
         self.latent_dim = latent_dim
         self.first_layer = nn.Linear(in_features = latent_dim, out_features = hidden_dim)
         self.final_layer = nn.Linear(in_features = hidden_dim, out_features = item_dim)
+        self.nonlinearity = nonlinearity()
         self.layers = nn.Sequential()
         self.layers.add_module("linear_dec_1",
                                 nn.Linear(in_features = latent_dim, out_features = hidden_dim))
@@ -63,18 +66,21 @@ class MultVAE_decoder(nn.Module):
 
 class MultVae(nn.Module):
     def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_enc_hidden_layers = 1, n_dec_hidden_layers = 1, dropout = 0.5):
+        super(MultVae, self).__init__()
         self.encoder = MultVAE_encoder(
                                         item_dim = item_dim,
                                         hidden_dim = hidden_dim, 
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_enc_hidden_layers,
-                                        dropout = 0.5
+                                        dropout = 0.5,
+                                        nonlinearity=nn.Tanh
                                     )
         self.decoder = MultVAE_decoder(
                                         item_dim = item_dim,
                                         hidden_dim = hidden_dim, 
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_dec_hidden_layers,
+                                        nonlinearity=nn.Tanh
                                     )
     def reparamaterize(self, mu, logvars):
         if self.training:

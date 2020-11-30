@@ -6,7 +6,6 @@ import sys
 
 import torch
 from torch.utils.data import Dataset
-
 class BasicHotelDataset(Dataset):
 
     def __init__(self, data_path = None, dict_path = None):
@@ -34,7 +33,14 @@ class BasicHotelDataset(Dataset):
             self.data = pickle.load(fp)
         
         self.data = {key: value[1] for (key, value) in self.data.items()}
-
+        
+        num_keys = len(self.data.keys())
+        dataset_keys = self.data.keys()
+        
+        self.idx_to_dataset_keys_dict = dict(zip(range(num_keys),dataset_keys))
+        
+        
+        
         with open(dict_path, 'r') as fp:
             self.hotel_length = len(json.load(fp))
         
@@ -45,7 +51,9 @@ class BasicHotelDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist
 
-        user_interactions = [self.data[k] for k in idx] #list of dicts
+        if isinstance(idx, int):
+            idx = [idx]
+        user_interactions = [self.data[self.idx_to_dataset_keys_dict[k]] for k in idx] #list of dicts
         sparse_dok = sparse.dok_matrix((len(idx),self.hotel_length))
         for i in range(len(user_interactions)):
             for j in user_interactions[i].keys():
