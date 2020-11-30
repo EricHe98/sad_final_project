@@ -3,7 +3,7 @@ from scipy import sparse
 import json
 import os
 import sys
-
+import numpy as np
 import torch
 from torch.utils.data import Dataset
 class BasicHotelDataset(Dataset):
@@ -54,7 +54,7 @@ class BasicHotelDataset(Dataset):
         if isinstance(idx, int):
             idx = [idx]
         user_interactions = [self.data[self.idx_to_dataset_keys_dict[k]] for k in idx] #list of dicts
-        sparse_dok = sparse.dok_matrix((len(idx),self.hotel_length))
+        sparse_dok = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
         for i in range(len(user_interactions)):
             for j in user_interactions[i].keys():
                 sparse_dok[i,j] = user_interactions[i][j]

@@ -12,9 +12,18 @@ def make_dataloader(data_path = None, hotel_path = None):
 
 
 
+def VAE_loss_function(x_hat, x, mu, logvar, beta):
+
+    bce = f.binary_cross_entropy(x_hat, x, reduction='sum')
+    kl_div = -0.5 * torch.mean(torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1))
+    
+    return bce + beta * kl_div, bce, kl_div
+
+
 def train_and_validate(model,
                        train_loader,
                        valid_loader,
+                       beta=1.0,
                        num_epoch=100,
                        learning_rate=1e-4,
                        log_interval=1,
@@ -34,20 +43,18 @@ def train_and_validate(model,
     best_val_loss = 10e7
 
     
-
-
     for epoch_ii  in range(num_epoch):
         print("Epoch {}".format(epoch_ii,))
 
         #Train
-        train_loss,train_bce,train_kld = train(model,train_loader,optimizer)
+        train_loss,train_bce,train_kld = train(model,beta,train_loader,optimizer)
         train_loss_history.append(train_loss)
         train_bce_history.append(train_bce)
         train_kld_history.append(train_kld)
           
         
         # Validate
-        current_val_loss, new_best_val_loss,val_bce,val_kld = validate(model,valid_loader, best_val_loss)
+        current_val_loss, new_best_val_loss,val_bce,val_kld = validate(model,beta,valid_loader, best_val_loss)
         val_loss_history.append(current_val_loss)
         val_bce_history.append(val_bce)
         val_kld_history.append(val_kld)
@@ -69,7 +76,7 @@ def train_and_validate(model,
             
             
         
-def train(model, train_loader,optimizer):
+def train(model,beta, train_loader,optimizer):
     loss_per_epoch = 0
     bce_per_epoch = 0
     kld_per_epoch = 0
@@ -85,7 +92,11 @@ def train(model, train_loader,optimizer):
         # Zero out optimizer gradients
         optimizer.zero_grad()
         # Loss and calculate gradients
-        loss, bce, kld = loss_function(images_hat, images, mu, logvar, kl_weight)
+        #print(images_hat.shape)
+        #print(images.shape)
+        #print(mu)
+        #print(logvar)
+        loss, bce, kld = VAE_loss_function(images_hat, images, mu, logvar, beta)
         
         # Backward Pass
         loss.backward()
@@ -104,7 +115,7 @@ def train(model, train_loader,optimizer):
     return train_loss,train_bce,train_kld
 
 
-def validate(model, valid_loader, best_val_loss,save_path='checkpoints/multvae_basic_model.pth'):
+def validate(model, beta, valid_loader, best_val_loss,save_path='checkpoints/multvae_basic_model.pth'):
     total_loss = 0
     model.eval()
     loss_per_epoch = 0
@@ -115,7 +126,7 @@ def validate(model, valid_loader, best_val_loss,save_path='checkpoints/multvae_b
             images = data[0]
             images = images.to(device)
             images_hat, mu, logvar = model(images)
-            loss, bce, kld = loss_function(images_hat, images, mu, logvar, kl_weight)
+            loss, bce, kld = VAE_loss_function(images_hat, images, mu, logvar, beta)
             loss_per_epoch += loss.item()
             bce_per_epoch += bce.item()
             kld_per_epoch += kld.item()
@@ -137,16 +148,16 @@ def validate(model, valid_loader, best_val_loss,save_path='checkpoints/multvae_b
 
 
 if __name__ == '__main__':
-    
+    print(torch.__version__)
     
     #Define loaders
-    train_loader, hotel_length = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl',
+    train_loader, hotel_length = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/train/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(train_loader)))
-    val_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl',
+    val_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/val/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(val_loader)))
-    test_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/test/user_to_queries.pkl',
+    test_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/test/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(test_loader)))
     
@@ -180,6 +191,7 @@ if __name__ == '__main__':
     train_and_validate(model=model,
                        train_loader=train_loader,
                        valid_loader=test_loader,
+                       beta=1.0,
                        num_epoch=1,
                        learning_rate=1e-4,
                        log_interval=1,

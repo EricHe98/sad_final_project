@@ -57,10 +57,11 @@ class MultVAE_decoder(nn.Module):
                 self.layers.add_module("Tanh_dec_{}".format(i + 2), self.nonlinearity)
         
         self.item_layer = nn.Linear(in_features = hidden_dim, out_features = item_dim)
-
+        self.final_nonlinearity = nn.Sigmoid()
     def forward(self, x):
         output = self.layers(x)
         items = self.item_layer(output)
+        items = self.final_nonlinearity(items)
         return items
 
 
@@ -73,16 +74,16 @@ class MultVae(nn.Module):
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_enc_hidden_layers,
                                         dropout = 0.5,
-                                        nonlinearity=nn.Tanh
+                                        nonlinearity=nn.Sigmoid
                                     )
         self.decoder = MultVAE_decoder(
                                         item_dim = item_dim,
                                         hidden_dim = hidden_dim, 
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_dec_hidden_layers,
-                                        nonlinearity=nn.Tanh
+                                        nonlinearity=nn.Sigmoid
                                     )
-    def reparamaterize(self, mu, logvars):
+    def reparameterize(self, mu, logvar):
         if self.training:
             std = torch.exp(0.5 * logvar)
             eps = torch.randn_like(std)
@@ -92,11 +93,6 @@ class MultVae(nn.Module):
 
     def forward(self, x):
         enc_mu, enc_logvar = self.encoder(x)
-        z = reparamaterize(enc_mu, enc_logvar)
+        z = self.reparameterize(enc_mu, enc_logvar)
         items = self.decoder(z)
-        return enc_mu, enc_logvar, items
-
-def VAE_loss_function(x_hat, x, mu, logvar, beta = 1.00):
-    bce = f.binary_cross_entropy(x_hat, x)
-    kl_div = -0.5 * torch.mean(torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1))
-    return bce + beta * kl_div
+        return items,enc_mu, enc_logvar
