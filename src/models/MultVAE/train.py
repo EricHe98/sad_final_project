@@ -151,13 +151,13 @@ if __name__ == '__main__':
     print(torch.__version__)
     
     #Define loaders
-    train_loader, hotel_length = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/train/user_to_queries.pkl',
+    train_loader, hotel_length = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(train_loader)))
-    val_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/val/user_to_queries.pkl',
+    val_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(val_loader)))
-    test_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/small_100/test/user_to_queries.pkl',
+    test_loader,_ = make_dataloader(data_path = '/scratch/work/js11133/sad_data/processed/full/test/user_to_queries.pkl',
                                    hotel_path='/scratch/work/js11133/sad_data/processed/hotel_hash.json')
     #print(next(iter(test_loader)))
     

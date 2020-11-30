@@ -2,8 +2,9 @@
 
 #SBATCH --job-name=train_multvae
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=64gb
+#SBATCH --gres=gpu:1
 #SBATCH --time=24:00:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=awd275@nyu.edu
