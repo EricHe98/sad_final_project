@@ -42,8 +42,6 @@ class MultVAE_decoder(nn.Module):
         super(MultVAE_decoder, self).__init__()
         self.item_dim = item_dim
         self.latent_dim = latent_dim
-        self.first_layer = nn.Linear(in_features = latent_dim, out_features = hidden_dim)
-        self.final_layer = nn.Linear(in_features = hidden_dim, out_features = item_dim)
         self.nonlinearity = nonlinearity()
         self.layers = nn.Sequential()
         self.layers.add_module("linear_dec_1",
@@ -57,11 +55,11 @@ class MultVAE_decoder(nn.Module):
                 self.layers.add_module("Tanh_dec_{}".format(i + 2), self.nonlinearity)
         
         self.item_layer = nn.Linear(in_features = hidden_dim, out_features = item_dim)
-        self.final_nonlinearity = nn.Sigmoid()
+
     def forward(self, x):
         output = self.layers(x)
         items = self.item_layer(output)
-        items = self.final_nonlinearity(items)
+        items = self.nonlinearity(items)
         return items
 
 
