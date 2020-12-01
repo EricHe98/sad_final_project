@@ -16,19 +16,14 @@ class BasicHotelDataset(Dataset):
         """
         if data_path is None:
             raise ValueError('Please specify data_path')
+        elif os.path.isfile(data_path) == False:
+            raise ValueError('Not Correct file path')
+        
         if dict_path is None:
             raise ValueError('Need path of hashes')
-        
-        #_ , ext = os.path.splitext(data_path)
-        
-        #if ext != 'pkl':
-         #   raise ValueError('Incorrect File to upload')
-        
-        #_, ext2 = os.path.splitext(dict_path)
-        
-        #if ext2 != 'json':
-         #   raise ValueError('Incorrect File to use as indicies')
-        
+        elif os.path.isfile(dict_path) == False:
+            raise ValueError('Not Correct file path to hashes')
+                
         with open(data_path,'rb') as fp:
             self.data = pickle.load(fp)
         
@@ -38,8 +33,6 @@ class BasicHotelDataset(Dataset):
         dataset_keys = self.data.keys()
         
         self.idx_to_dataset_keys_dict = dict(zip(range(num_keys),dataset_keys))
-        
-        
         
         with open(dict_path, 'r') as fp:
             self.hotel_length = len(json.load(fp))
@@ -53,6 +46,7 @@ class BasicHotelDataset(Dataset):
 
         if isinstance(idx, int):
             idx = [idx]
+        
         user_interactions = [self.data[self.idx_to_dataset_keys_dict[k]] for k in idx] #list of dicts
         sparse_dok = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
         for i in range(len(user_interactions)):

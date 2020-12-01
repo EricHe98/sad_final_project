@@ -11,51 +11,6 @@ from torch.utils.data import Dataset
 import torch.sparse
 from preprocessing import *
 import pickle
-class HotelDataset(Dataset):
-
-    def __init__(self, data_path = None, dict_path = None):
-        """
-        Args
-
-            data_path (string): Path to the csv file
-        """
-        if data_path is None:
-            raise ValueError('Please specify data_path')
-        if dict_path is None:
-            raise ValueError('Need path of hashes')
-        
-        _ , ext = os.path.splitext(data_path)
-        if ext != 'csv':
-            raise ValueError('Incorrect File to upload')
-        _, ext2 = os.path.splitext(dict_path)
-        if ext2 != 'json':
-            raise ValueError('Incorrect File to use as indicies')
-        self.data_sparse = pd.read_csv(data_path)
-
-
-        with open(os.path.join(dict_path, 'user_hash.json'), 'r') as fp:
-            self.user_id_indexed = json.load(fp)
-
-        with open(os.path.join(dict_path, 'hotel_hash.json'), 'r') as fp:
-            self.hotel_id_indexed = json.load(fp)
-
-        self.sparse_index = torch.LongTensor([[data_sparse.user_id, data_sparse.hotel_id]])
-        self.sparse_value = torch.LongTensor([[data_sparse.labels]])
-
-        self.interactions = torch.sparse.FloatTensor(sparse_index,
-                                                    sparse_value,
-                                                    torch.size([len(user_id_indexed), len(hotel_id_indexed)]
-                                                    )).to_dense()
-        def __len__(self):
-            return len(self.data_sparse)
-
-        def __getitem__(self, idx):
-            if torch.is_tensor(idx):
-                idx = idx.tolist
-            return self.interactions[idx, :]
-
-
-
 
 def read_args(input_list):
     if len(input_list) != 3:
