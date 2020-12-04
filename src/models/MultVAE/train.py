@@ -1,5 +1,5 @@
 from MultVAE_Dataset import *
-from multVAE_model import *
+from MultVAE_model import *
 from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
@@ -135,9 +135,11 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        print("Starting Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
+        print("ending Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
+        torch.save(model.state_dict(), '/scratch/work/js11133/sad_data/models/multVAE/multvae_'+str(epoch_ii)+'.pth')
+
         #End For
-    
+      
     metrics= (train_loss_history,train_bce_history,train_kld_history, val_loss_history,val_bce_history,val_kld_history)
     metrics_file_path = metrics_file_path
     with open(metrics_file_path, "wb" ) as f:
@@ -215,7 +217,7 @@ if __name__ == '__main__':
                        valid_loader=test_loader,
                        device = device,
                        beta=1.0,
-                       num_epoch=2,
+                       num_epoch=400,
                        learning_rate=1e-4,
                        log_interval=1,
                        max_patience=5,
