@@ -91,7 +91,7 @@ if __name__ == '__main__':
                                                       valid_loader=val_loader,
                                                       device = device,
                                                       beta=1.0,
-                                                      num_epoch=400,
+                                                      num_epoch=1,
                                                       learning_rate=1e-4,
                                                       max_patience=5,
                                                       )
@@ -102,7 +102,7 @@ if __name__ == '__main__':
       with open('checkpoints/metrics.pkl', "wb" ) as f:
         pickle.dump(metrics,f)
 
-      mlflow.log_artifacts('/scratch/work/js11133/sad_data/models/multVAE', artifact_path = 'models_per_epoch')
+      #mlflow.log_artifacts('/scratch/work/js11133/sad_data/models/multVAE', artifact_path = 'models_per_epoch')
       mlflow.log_artifact('checkpoints/metrics.pkl')
       
       mlflow.log_metric('Num_epochs', final_epoch + 1)
