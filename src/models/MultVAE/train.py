@@ -109,7 +109,8 @@ if __name__ == '__main__':
       mlflow.log_metric('training_time', train_time)
       print('Model trained in {}'.format(train_time))
 
-      mlflow.pytorch.log_model(pytorch_model = model)
+      mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}.uri'.format(run_id))
+
 
 
     

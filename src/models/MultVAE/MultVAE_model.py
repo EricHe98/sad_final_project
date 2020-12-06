@@ -98,9 +98,9 @@ class MultVae(nn.Module):
         items = items * torch.count_nonzero(x, dim = 0)
         return items,enc_mu, enc_logvar
 
-def VAE_loss_function(x_hat, x, mu, logvar, beta):
+def VAE_loss_function(x_hat, x, observed, mu, logvar, beta):
 
-    bce = f.binary_cross_entropy(x_hat, x, reduction='sum')
+    bce = f.binary_cross_entropy(x_hat * observed, x, reduction='sum')
     kl_div = -0.5 * torch.mean(torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1))
     
     return bce + beta * kl_div, bce, kl_div
