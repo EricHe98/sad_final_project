@@ -4,7 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
 import argparse
-import mlflow
+import mlflow.pytorch
 
 def make_dataloader(data_path = None, hotel_path = None, batch_size = 256):
     hotel_dataset = BasicHotelDataset(data_path, hotel_path)

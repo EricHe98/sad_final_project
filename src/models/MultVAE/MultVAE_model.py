@@ -81,6 +81,7 @@ class MultVae(nn.Module):
                                         n_hidden_layers = n_dec_hidden_layers,
                                         nonlinearity=nn.Sigmoid
                                     )
+        self.softmax = nn.Softmax()
     def reparameterize(self, mu, logvar):
         if self.training:
             std = torch.exp(0.5 * logvar)
@@ -93,6 +94,8 @@ class MultVae(nn.Module):
         enc_mu, enc_logvar = self.encoder(x)
         z = self.reparameterize(enc_mu, enc_logvar)
         items = self.decoder(z)
+        items = self.softmax(items)
+        items = items * torch.count_nonzero(x, dim = 0)
         return items,enc_mu, enc_logvar
 
 def VAE_loss_function(x_hat, x, mu, logvar, beta):

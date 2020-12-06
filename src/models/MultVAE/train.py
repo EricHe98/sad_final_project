@@ -1,12 +1,12 @@
 from MultVAE_Dataset import *
 from MultVAE_model import *
-from MultVae_training_helper import * as helper 
+from MultVAE_training_helper import *
 from torch import nn
 from torch.utils.data import DataLoader
-from datetime import dt
+import datetime as dt
 import argparse
 import mlflow
-
+import mlflow.pytorch
 
 """
 TODO:
@@ -39,11 +39,11 @@ args = parser.parse_args()
 if __name__ == '__main__':
     
     #Define loaders
-    train_loader, hotel_length = helper.make_dataloader(data_path = args.train_path,
+    train_loader, hotel_length = make_dataloader(data_path = args.train_path,
                                                 hotel_path=args.dict_path,
                                                 batch_size = 256)
 
-    val_loader, _ = helper.make_dataloader(data_path = args.val_path,
+    val_loader, _ = make_dataloader(data_path = args.val_path,
                                    hotel_path=args.dict_path,
                                    batch_size = 256)
     with mlflow.start_run(run_name = 'MultVAE'): 
@@ -64,15 +64,15 @@ if __name__ == '__main__':
           device = torch.device("cpu")    
 
       
-      mlflow.log_params('device', device)
-      mlflow.log_params('hotel_dim', hotel_length)
-      mlflow.log_params('hidden_dim', 600)
-      mlflow.log_params('latent_dim', 200)
-      mlflow.log_params('n_enc_hidden_layers', 1)
-      mlflow.log_params('n_dec_hidden_layers', 1)
-      mlflow.log_params('dropout', 0.5)
-      mlflow.log_params('beta', 1.0)
-      mlflow.log_params('learning_rate', 1e-4)
+      mlflow.log_param('device', device)
+      mlflow.log_param('hotel_dim', hotel_length)
+      mlflow.log_param('hidden_dim', 600)
+      mlflow.log_param('latent_dim', 200)
+      mlflow.log_param('n_enc_hidden_layers', 1)
+      mlflow.log_param('n_dec_hidden_layers', 1)
+      mlflow.log_param('dropout', 0.5)
+      mlflow.log_param('beta', 1.0)
+      mlflow.log_param('learning_rate', 1e-4)
 
       # train, validate ..
       model = MultVae(item_dim=hotel_length,
@@ -85,10 +85,10 @@ if __name__ == '__main__':
       model.to(device)
       time_start = dt.datetime.now()
 
-      metrics, final_epoch = helper.train_and_validate(
+      metrics, final_epoch =train_and_validate(
                                                       model=model,
                                                       train_loader=train_loader,
-                                                      valid_loader=test_loader,
+                                                      valid_loader=val_loader,
                                                       device = device,
                                                       beta=1.0,
                                                       num_epoch=400,
