@@ -91,7 +91,7 @@ if __name__ == '__main__':
                                                       valid_loader=val_loader,
                                                       device = device,
                                                       beta=1.0,
-                                                      num_epoch=400,
+                                                      num_epoch=300,
                                                       learning_rate=1e-4,
                                                       max_patience=5,
                                                       )

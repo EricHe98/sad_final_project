@@ -54,7 +54,7 @@ def validate(model,
             valid_loader,
             best_val_loss,
             device,
-            save_path='checkpoints/multvae_basic_model.pth'):
+            save_path='src/models/MultVAE/checkpoints/multvae_basic_model.pth'):
     total_loss = 0
     model.eval()
     loss_per_epoch = 0
