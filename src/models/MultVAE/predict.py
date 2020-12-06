@@ -141,7 +141,7 @@ def __main__():
                               ) 
         x_preds = x_preds[x_preds['observed']==1]
         x_preds['hotel_id'] = x_preds.index.map(hotel_idx_to_hotel_id.get)
-        x_preds['sr_id'] = sr_id
+        x_preds['search_request_id'] = sr_id
         x_preds['user_id'] = user_id_unhashed
         
         df_list.append(x_preds)
@@ -154,7 +154,7 @@ def __main__():
         ['score']\
         .rank(ascending=False)
     if not os.path.exists(args.output_dir):
-        os.makedirs(predictions_path)
+        os.makedirs(args.output_dir)
     pred_array.to_parquet(os.path.join(args.output_dir, 'multVAE_predictions.parquet') )
     
    
