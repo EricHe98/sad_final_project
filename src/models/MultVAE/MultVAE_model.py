@@ -95,7 +95,7 @@ class MultVae(nn.Module):
         z = self.reparameterize(enc_mu, enc_logvar)
         items = self.decoder(z)
         items = self.softmax(items)
-        items = items * torch.count_nonzero(x, dim = 0)
+        items = items * torch.count_nonzero(x, dim = 1)
         return items,enc_mu, enc_logvar
 
 def VAE_loss_function(x_hat, x, observed, mu, logvar, beta):
