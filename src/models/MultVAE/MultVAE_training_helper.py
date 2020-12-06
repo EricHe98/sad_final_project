@@ -4,6 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
 import argparse
+import mlflow.pytorch
 
 def make_dataloader(data_path = None, hotel_path = None, batch_size = 256):
     hotel_dataset = BasicHotelDataset(data_path, hotel_path)
@@ -87,7 +88,6 @@ def train_and_validate(model,
                        learning_rate = 1e-4,
                        log_interval = 1,
                        max_patience = 5,
-                       metrics_file_path = 'checkpoints/metrics.pkl',
                        ):
     #Initialize stuff
     patience_counter = 0
@@ -101,11 +101,11 @@ def train_and_validate(model,
     val_bce_history = []
     val_kld_history = []
     best_val_loss = 10e7
+    final_epoch = 0
 
     
     for epoch_ii  in range(num_epoch):
         print("Epoch {}".format(epoch_ii + 1,))
-        print("Starting Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
 
         #Train
         train_loss,train_bce,train_kld = train(model,beta,train_loader,optimizer, device)
@@ -127,13 +127,10 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        print("ending Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
-        torch.save(model.state_dict(), '/scratch/work/js11133/sad_data/models/multVAE/multvae_'+str(epoch_ii)+'.pth')
+        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_trial'+str(epoch_ii)+'.uri')
+        final_epoch = epoch_ii
 
-        #End For
       
     metrics= (train_loss_history,train_bce_history,train_kld_history, val_loss_history,val_bce_history,val_kld_history)
-    metrics_file_path = metrics_file_path
-    with open(metrics_file_path, "wb" ) as f:
-        pickle.dump(metrics,f)
-    return train_loss_history,train_bce_history,train_kld_history, val_loss_history,val_bce_history,val_kld_history
+
+    return metrics, final_epoch
