@@ -3,8 +3,9 @@ from MultVAE_model import *
 from MultVae_training_helper import * as helper 
 from torch import nn
 from torch.utils.data import DataLoader
-from datetime import datetime
+from datetime import dt
 import argparse
+import mlflow
 
 
 """
@@ -14,36 +15,28 @@ TODO:
     3.) Put into ML Flow
 
 """
+parser = argparse.ArgumentParser(description='File Paths for training, validating, and testing')
+parser.add_argument('-tr', 
+                    '--train_path', 
+                    nargs = '?',
+                    type = str, 
+                    help = 'training data path',
+                    default = '/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl')
+parser.add_argument('-v',
+                    '--val_path', 
+                    nargs = '?',
+                    type = str,
+                    help = 'validation data path',
+                    default ='/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl' )
+parser.add_argument('-d', 
+                    '--dict_path', 
+                    nargs = '?',
+                    type = str,
+                    help = 'Dictionary path',
+                    default = '/scratch/work/js11133/sad_data/processed/hotel_hash.json')
+args = parser.parse_args()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='File Paths for training, validating, and testing')
-    parser.add_argument('-tr', 
-                        '--train_path', 
-                        nargs = '?',
-                        type = str, 
-                        help = 'training data path',
-                        default = '/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl')
-    parser.add_argument('-v',
-                        '--val_path', 
-                        nargs = '?',
-                        type = str,
-                        help = 'validation data path',
-                        default ='/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl' )
-    parser.add_argument('-t', 
-                        '--test_path', 
-                        nargs = '?',
-                        type = str, 
-                        help = 'testing data path',
-                        default = '/scratch/work/js11133/sad_data/processed/full/test/user_to_queries.pkl')
-    parser.add_argument('-d', 
-                        '--dict_path', 
-                        nargs = '?',
-                        type = str,
-                        help = 'Dictionary path',
-                        default = '/scratch/work/js11133/sad_data/processed/hotel_hash.json')
-    args = parser.parse_args()
-    
-    print('Torch Version: {}'.format(torch.__version__))
     
     #Define loaders
     train_loader, hotel_length = helper.make_dataloader(data_path = args.train_path,
@@ -53,46 +46,70 @@ if __name__ == '__main__':
     val_loader, _ = helper.make_dataloader(data_path = args.val_path,
                                    hotel_path=args.dict_path,
                                    batch_size = 256)
+    with mlflow.start_run(run_name = 'MultVAE'): 
+      
+      run_id = mlflow.active_run().info.run_id
+      print('MLFlow Run ID is :{}'.format(run_id))
+      mlflow.log_param('dataset', 'full')
+      mlflow.log_param('train_split', 'train')
+      mlflow.log_param('model_name', 'MultVAE')
+      mlflow.log_param('run_id', run_id)
 
-    test_loader, _ = helper.make_dataloader(data_path = args.test_path,
-                                   hotel_path=args.dict_path,
-                                   batch_size = 256)
-    
-    if torch.cuda.is_available():
+      if torch.cuda.is_available():
+          device = torch.device("cuda")
+          print('There are %d GPU(s) available.' % torch.cuda.device_count())
+          print('We will use the GPU:', torch.cuda.get_device_name(0))
+      else:
+          print('No GPU available, using the CPU instead.')
+          device = torch.device("cpu")    
 
-        # Tell PyTorch to use the GPU.
-        device = torch.device("cuda")
-        print('There are %d GPU(s) available.' % torch.cuda.device_count())
-        print('We will use the GPU:', torch.cuda.get_device_name(0))
-    else:
-        print('No GPU available, using the CPU instead.')
-        device = torch.device("cpu")    
-    
-    # train, validate ..
-    
-    zdim=20 
-    model = MultVae(item_dim=hotel_length,
-                    hidden_dim=600,
-                    latent_dim=200,
-                    n_enc_hidden_layers = 1,
-                    n_dec_hidden_layers = 1,
-                    dropout = 0.5
-                   )
-    
-    model.to(device)
-    
-    helper.train_and_validate(model=model,
-                       train_loader=train_loader,
-                       valid_loader=test_loader,
-                       device = device,
-                       beta=1.0,
-                       num_epoch=400,
-                       learning_rate=1e-4,
-                       log_interval=1,
-                       max_patience=5,
-                       metrics_file_path='checkpoints/metrics.pkl',
-                       )
+      
+      mlflow.log_params('device', device)
+      mlflow.log_params('hotel_dim', hotel_length)
+      mlflow.log_params('hidden_dim', 600)
+      mlflow.log_params('latent_dim', 200)
+      mlflow.log_params('n_enc_hidden_layers', 1)
+      mlflow.log_params('n_dec_hidden_layers', 1)
+      mlflow.log_params('dropout', 0.5)
+      mlflow.log_params('beta', 1.0)
+      mlflow.log_params('learning_rate', 1e-4)
 
+      # train, validate ..
+      model = MultVae(item_dim=hotel_length,
+                      hidden_dim=600,
+                      latent_dim=200,
+                      n_enc_hidden_layers = 1,
+                      n_dec_hidden_layers = 1,
+                      dropout = 0.5
+                     )
+      model.to(device)
+      time_start = dt.datetime.now()
+
+      metrics, final_epoch = helper.train_and_validate(
+                                                      model=model,
+                                                      train_loader=train_loader,
+                                                      valid_loader=test_loader,
+                                                      device = device,
+                                                      beta=1.0,
+                                                      num_epoch=400,
+                                                      learning_rate=1e-4,
+                                                      max_patience=5,
+                                                      )
+      time_end = dt.datetime.now()
+      train_time = (time_end - time_start).total_seconds()
+
+
+      with open('checkpoints/metrics.pkl', "wb" ) as f:
+        pickle.dump(metrics,f)
+
+      mlflow.log_artifacts('/scratch/work/js11133/sad_data/models/multVAE', artifact_path = 'models_per_epoch')
+      mlflow.log_artifact('checkpoints/metrics.pkl')
+      
+      mlflow.log_metric('Num_epochs', final_epoch + 1)
+      mlflow.log_metric('training_time', train_time)
+      print('Model trained in {}'.format(train_time))
+
+      mlflow.pytorch.log_model(pytorch_model = model)
 
 
     
