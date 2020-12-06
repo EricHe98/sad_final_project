@@ -62,9 +62,9 @@ def validate(model,
     kld_per_epoch = 0
     with torch.no_grad():
         for data in valid_loader:
-            x = data.to(device)
+            x, observed = data[0].to(device), data[1].to(device)
             x_hat, mu, logvar = model(x)
-            loss, bce, kld = VAE_loss_function(x_hat, x, mu, logvar, beta)
+            loss, bce, kld = VAE_loss_function(x_hat, x, observed, mu, logvar, beta)
             loss_per_epoch += loss.item()
             bce_per_epoch += bce.item()
             kld_per_epoch += kld.item()

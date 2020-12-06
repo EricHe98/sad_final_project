@@ -54,6 +54,5 @@ class BasicHotelDataset(Dataset):
             for j in user_interactions[i].keys():
                 sparse_int[i,j] = user_interactions[i][j]
                 sparse_obs[i,j] = 1
-        sparse_int = sparse.coo_matrix(sparse_dok)
 
         return [torch.tensor(sparse_int.toarray()),torch.tensor(sparse_obs.toarray()) ]
