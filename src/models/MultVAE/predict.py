@@ -21,10 +21,10 @@ parser.add_argument('-r',
                     ) 
 parser.add_argument('-m',
                     '--multvae_model', 
-                    nargs = '?',
                     type = str,
-                    help='multVAE model. Should be a pytorch checkpoint (.pth file). Needs to be MultVAE class.
-                    default ='/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl' )
+		    required=True,
+                    help='multVAE model. Should be a pytorch checkpoint (.pth file). Needs to be MultVAE class.',
+                    )
                     
 parser.add_argument('-d',
                     '--dataset_pkl', 
@@ -37,7 +37,7 @@ parser.add_argument('-h',
                     nargs = '?',
                     type = str,
                     help='hotel_hash.json. Check make_hashes.py for info on the hash',
-                    default ='/scratch/work/js11133/sad_data/processed/hotel_hash.json )
+                    default ='/scratch/work/js11133/sad_data/processed/hotel_hash.json' )
                     
 parser.add_argument('-o',
                     '--output_dir', 
@@ -50,10 +50,10 @@ args = parser.parse_args()
 
 
 def __main__():
-	mlflow.start_run(run_id=args.run_id)
+    mlflow.start_run(run_id=args.run_id)
     # Load user to query_struct
     with open(args.dataset_pkl,'rb') as f:
-    	user_to_query_struct = pickle.load(f)
+        user_to_query_struct = pickle.load(f)
     # Load hotel_id to index dictionary
     with open(hotel_hash_json_path, 'r') as fp:
         hotel_id_indexed = json.load(fp)
@@ -70,13 +70,13 @@ def __main__():
     model = mlflow.pytorch.load_model('runs:/{}/model.json'.format(args.run_id))
     
     # generate predictions
-	y = model(X)
+    y = model(X)
     
     #pred_df = 
     
     raise NotImplementedError
-	pred_array['score'] = model.predict(xgb.DMatrix(X))
-	pred_array['rank'] = pred_array\
+    pred_array['score'] = model.predict(xgb.DMatrix(X))
+    pred_array['rank'] = pred_array\
 	    .groupby('search_request_id')\
 	    ['score']\
 	    .rank(ascending=False)
@@ -90,7 +90,7 @@ def __main__():
 	    os.mkdir(predictions_path)
 	    
 	pred_array.to_parquet(predictions_file)
-    '''
+        '''
 	# log 95th percentile latencies predicting on 2, 10, 50, 100, 500 results
 	# It's pretty hard to get a consistent timing. There are a lot of confounds.
 	# My convention here is to assume you have a Pandas DataFrame of the data ready to go
@@ -108,7 +108,7 @@ def __main__():
 		pctile_95 = np.percentile(times, 95)
 		print('95th percentile latency at {} results: {} ms'.format(r, pctile_95))
 		mlflow.log_metric('latency_{}_results'.format(r), pctile_95)
-   '''
+         '''
    
 if __name__ == '__main__':
 	__main__()
