@@ -91,7 +91,7 @@ if __name__ == '__main__':
                                                       valid_loader=val_loader,
                                                       device = device,
                                                       beta=1.0,
-                                                      num_epoch=1,
+                                                      num_epoch=400,
                                                       learning_rate=1e-4,
                                                       max_patience=5,
                                                       )
@@ -107,9 +107,10 @@ if __name__ == '__main__':
       
       mlflow.log_metric('Num_epochs', final_epoch + 1)
       mlflow.log_metric('training_time', train_time)
-      print('Model trained in {}'.format(train_time))
+      print('Model trained in {} seconds'.format(train_time))
 
-      mlflow.pytorch.log_model(pytorch_model = model)
+      mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}.uri'.format(run_id))
+
 
 
     

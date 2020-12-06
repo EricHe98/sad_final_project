@@ -48,9 +48,11 @@ class BasicHotelDataset(Dataset):
             idx = [idx]
         
         user_interactions = [self.data[self.idx_to_dataset_keys_dict[k]] for k in idx] #list of dicts
-        sparse_dok = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
+        sparse_int = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
+        sparse_obs = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
         for i in range(len(user_interactions)):
             for j in user_interactions[i].keys():
-                sparse_dok[i,j] = user_interactions[i][j]
-           
-        return torch.tensor(sparse_dok.toarray())
+                sparse_int[i,j] = user_interactions[i][j]
+                sparse_obs[i,j] = 1
+
+        return [torch.tensor(sparse_int.toarray()),torch.tensor(sparse_obs.toarray()) ]

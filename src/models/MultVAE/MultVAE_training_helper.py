@@ -4,6 +4,8 @@ from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
 import argparse
+from scipy import sparse
+import numpy as np
 import mlflow.pytorch
 
 def make_dataloader(data_path = None, hotel_path = None, batch_size = 256):
@@ -23,13 +25,14 @@ def train(model,
 
     for data in train_loader: 
         #Send to devices
-        x = data.to(device)
+        x, observed = data[0].to(device), data[1].to(device)
         # Foward pass thru model
         x_hat, mu, logvar = model(x)
         # Zero out optimizer gradients
         optimizer.zero_grad()
         # Loss and calculate gradients
-        loss, bce, kld = VAE_loss_function(x_hat, x, mu, logvar, beta)
+            
+        loss, bce, kld = VAE_loss_function(x_hat, x, observed, mu, logvar, beta)
         # Backward Pass
         loss.backward()
         # Take the gradient descent step
@@ -59,9 +62,9 @@ def validate(model,
     kld_per_epoch = 0
     with torch.no_grad():
         for data in valid_loader:
-            x = data.to(device)
+            x, observed = data[0].to(device), data[1].to(device)
             x_hat, mu, logvar = model(x)
-            loss, bce, kld = VAE_loss_function(x_hat, x, mu, logvar, beta)
+            loss, bce, kld = VAE_loss_function(x_hat, x, observed, mu, logvar, beta)
             loss_per_epoch += loss.item()
             bce_per_epoch += bce.item()
             kld_per_epoch += kld.item()
@@ -127,7 +130,7 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_trial'+str(epoch_ii)+'.uri')
+        #mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_trial'+str(epoch_ii)+'.uri')
         final_epoch = epoch_ii
 
       
