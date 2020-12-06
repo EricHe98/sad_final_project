@@ -4,6 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
 import argparse
+import mlflow
 
 def make_dataloader(data_path = None, hotel_path = None, batch_size = 256):
     hotel_dataset = BasicHotelDataset(data_path, hotel_path)
@@ -126,7 +127,7 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        torch.save(model.state_dict(), '/scratch/work/js11133/sad_data/models/multVAE/multvae_'+str(epoch_ii)+'.pth')
+        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_'+str(epoch_ii)+'.uri')
         final_epoch = epoch_ii
 
       
