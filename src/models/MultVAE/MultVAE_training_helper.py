@@ -136,7 +136,7 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}_epoch_{}.uri'.format(run_id, epoch_ii))
+        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_annealed_{}_epoch_{}.uri'.format(run_id, epoch_ii))
         final_epoch = epoch_ii
 
       

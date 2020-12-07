@@ -68,11 +68,11 @@ if __name__ == '__main__':
       mlflow.log_param('hotel_dim', hotel_length)
       mlflow.log_param('hidden_dim', 600)
       mlflow.log_param('latent_dim', 200)
-      mlflow.log_param('n_enc_hidden_layers', 1)
-      mlflow.log_param('n_dec_hidden_layers', 1)
       mlflow.log_param('dropout', 0.5)
       mlflow.log_param('beta', 1.0)
       mlflow.log_param('learning_rate', 1e-4)
+      mlflow.log_param('n_enc_hidden_layers', 1)
+      mlflow.log_param('n_dec_hidden_layers', 1)
 
       # train, validate ..
       model = MultVae(item_dim=hotel_length,
@@ -111,7 +111,7 @@ if __name__ == '__main__':
       mlflow.log_metric('training_time', train_time)
       print('Model trained in {} seconds'.format(train_time))
 
-      mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}.uri'.format(run_id))
+      mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_anneal_{}.uri'.format(run_id))
 
 
 
