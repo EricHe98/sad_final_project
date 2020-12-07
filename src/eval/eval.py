@@ -83,12 +83,12 @@ def __main__():
 
 	select_hotels = [895, 473, 80698, 69296, 82110, 44, 2403, 52400, 2600, 4046]
 	joined['select_hotels'] = joined['hotel_id'].isin(select_hotels)
-	lm.mrr(
+	mrr_important_hotels = lm.mrr(
 		joined,
 		groupby='search_request_id',
 		ranker='score',
 		label='select_hotels')
-	mlflow.log_metric('mrr_important_hotels')
+	mlflow.log_metric('mrr_important_hotels', mrr_important_hotels)
 
 	mlflow.end_run()
 
