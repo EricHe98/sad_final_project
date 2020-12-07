@@ -46,7 +46,9 @@ class BasicHotelDataset(Dataset):
 
         if isinstance(idx, int):
             idx = [idx]
-        
+        # k is the dataloader index, 
+        # self.idx_to_dataset_keys_dict[k] is the user_id associated to k
+        # self.data[self.idx_to_dataset_keys_dict[k]] is the interaction_vector associated with user_id
         user_interactions = [self.data[self.idx_to_dataset_keys_dict[k]] for k in idx] #list of dicts
         sparse_int = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
         sparse_obs = sparse.dok_matrix((len(idx),self.hotel_length),dtype=np.float32)
