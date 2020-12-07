@@ -66,21 +66,23 @@ class MultVAE_decoder(nn.Module):
 class MultVae(nn.Module):
     def __init__(self, item_dim, hidden_dim = 600, latent_dim = 200, n_enc_hidden_layers = 1, n_dec_hidden_layers = 1, dropout = 0.5):
         super(MultVae, self).__init__()
+        self.item_dim = item_dim
         self.encoder = MultVAE_encoder(
                                         item_dim = item_dim,
                                         hidden_dim = hidden_dim, 
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_enc_hidden_layers,
                                         dropout = 0.5,
-                                        nonlinearity=nn.Sigmoid
+                                        nonlinearity=nn.Tanh
                                     )
         self.decoder = MultVAE_decoder(
                                         item_dim = item_dim,
                                         hidden_dim = hidden_dim, 
                                         latent_dim = latent_dim,
                                         n_hidden_layers = n_dec_hidden_layers,
-                                        nonlinearity=nn.Sigmoid
+                                        nonlinearity=nn.Tanh
                                     )
+        self.softmax = nn.Softmax(dim = 2)
     def reparameterize(self, mu, logvar):
         if self.training:
             std = torch.exp(0.5 * logvar)
@@ -93,11 +95,13 @@ class MultVae(nn.Module):
         enc_mu, enc_logvar = self.encoder(x)
         z = self.reparameterize(enc_mu, enc_logvar)
         items = self.decoder(z)
+        items = self.softmax(items)
+        total_int = torch.count_nonzero(x, dim = 2).unsqueeze(dim = 1)
+        items =items * total_int.expand(-1,-1, self.item_dim)
         return items,enc_mu, enc_logvar
 
-def VAE_loss_function(x_hat, x, mu, logvar, beta):
-
-    bce = f.binary_cross_entropy(x_hat, x, reduction='sum')
+def VAE_loss_function(x_hat, x, observed, mu, logvar, beta):
+    bce = f.binary_cross_entropy(x_hat * observed, x, reduction='sum')
     kl_div = -0.5 * torch.mean(torch.sum(1 + logvar - mu.pow(2) - logvar.exp(), dim=1))
     
     return bce + beta * kl_div, bce, kl_div

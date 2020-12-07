@@ -39,6 +39,8 @@ def __main__():
 
 	mlflow.start_run(args.run_id)
 
+	mlflow.log_param('evaluation_set', args.split)
+
 	pred_file = 'predictions/{}/{}/{}/predictions.parquet'\
 	    .format(args.run_id, args.dataset, args.split)
 	pred = pd.read_parquet(pred_file)
@@ -81,8 +83,16 @@ def __main__():
 	    b='price_rank')
 	mlflow.log_metric('tau_price', tau_price.mean())
 
+	select_hotels = [895, 473, 80698, 69296, 82110, 44, 2403, 52400, 2600, 4046]
+	joined['select_hotels'] = joined['hotel_id'].isin(select_hotels)
+	mrr_important_hotels = lm.mrr(
+		joined,
+		groupby='search_request_id',
+		ranker='score',
+		label='select_hotels')
+	mlflow.log_metric('mrr_important_hotels', mrr_important_hotels)
+
 	mlflow.end_run()
 
 if __name__ == '__main__':
 	__main__()
-	

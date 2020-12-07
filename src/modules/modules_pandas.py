@@ -1,7 +1,7 @@
 import os
 import pandas as pd 
 
-def read_parquet(data_path, num_partitions=None, random=False, verbose=True):
+def read_parquet(data_path, num_partitions=None, random=False, verbose=True, columns=None):
     files = os.listdir(data_path)
     if random:
         import random
@@ -20,7 +20,7 @@ def read_parquet(data_path, num_partitions=None, random=False, verbose=True):
             fp = os.path.join(data_path, file_path)
             if verbose:
                 print('Reading in data from {}'.format(fp))
-            data.append(pd.read_parquet(os.path.join(data_path, file_path)))
+            data.append(pd.read_parquet(os.path.join(data_path, file_path), columns=columns))
             if verbose:
                 print('Data of shape {}'.format(data[-1].shape))
             num_reads += 1

@@ -82,7 +82,7 @@ def predict(run_id,
            ):
     print('IN MAIN')
     mlflow.start_run(run_id=run_id)
-    
+ 
     #Check for CUDA
     if torch.cuda.is_available():
 
@@ -98,6 +98,7 @@ def predict(run_id,
         user_to_query_struct = pickle.load(f)
     #Put the dataset into the dataloader
     dataset = BasicHotelDataset(data_path = dataset_pkl, dict_path = hotel_hash)
+
     
     #dataloader = DataLoader(dataset, batch_size = 1024), hotel_length
     #Create sr_id_to_user_id dictionary
@@ -114,6 +115,7 @@ def predict(run_id,
     
     # Load user_id to index dictionary
     with open(user_hash, 'r') as fp:
+
         user_id_indexed = json.load(fp)  
         
     #invert the maps so we can go back to hotel_id and user_id
@@ -126,6 +128,7 @@ def predict(run_id,
     user_id_to_dlkeys = {v: k for k, v in dlkeys_to_user_id.items()}
     # Load our multVAE model
     model = mlflow.pytorch.load_model(multvae_model)
+
     model.to(device)
     print('loading done')
     # generate predictions

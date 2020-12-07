@@ -4,6 +4,9 @@ from torch import nn
 from torch.utils.data import DataLoader
 from datetime import datetime
 import argparse
+from scipy import sparse
+import numpy as np
+import mlflow.pytorch
 
 def make_dataloader(data_path = None, hotel_path = None, batch_size = 256):
     hotel_dataset = BasicHotelDataset(data_path, hotel_path)
@@ -22,13 +25,14 @@ def train(model,
 
     for data in train_loader: 
         #Send to devices
-        x = data.to(device)
+        x, observed = data[0].to(device), data[1].to(device)
         # Foward pass thru model
         x_hat, mu, logvar = model(x)
         # Zero out optimizer gradients
         optimizer.zero_grad()
         # Loss and calculate gradients
-        loss, bce, kld = VAE_loss_function(x_hat, x, mu, logvar, beta)
+            
+        loss, bce, kld = VAE_loss_function(x_hat, x, observed, mu, logvar, beta)
         # Backward Pass
         loss.backward()
         # Take the gradient descent step
@@ -50,7 +54,7 @@ def validate(model,
             valid_loader,
             best_val_loss,
             device,
-            save_path='checkpoints/multvae_basic_model.pth'):
+            save_path='src/models/MultVAE/checkpoints/multvae_basic_model.pth'):
     total_loss = 0
     model.eval()
     loss_per_epoch = 0
@@ -58,9 +62,9 @@ def validate(model,
     kld_per_epoch = 0
     with torch.no_grad():
         for data in valid_loader:
-            x = data.to(device)
+            x, observed = data[0].to(device), data[1].to(device)
             x_hat, mu, logvar = model(x)
-            loss, bce, kld = VAE_loss_function(x_hat, x, mu, logvar, beta)
+            loss, bce, kld = VAE_loss_function(x_hat, x, observed, mu, logvar, beta)
             loss_per_epoch += loss.item()
             bce_per_epoch += bce.item()
             kld_per_epoch += kld.item()
@@ -82,12 +86,13 @@ def train_and_validate(model,
                        train_loader,
                        valid_loader,
                        device,
-                       beta = 1.0,
+                       start_beta = 0.0,
+                       max_beta = 1.0,
                        num_epoch = 100,
                        learning_rate = 1e-4,
                        log_interval = 1,
                        max_patience = 5,
-                       metrics_file_path = 'checkpoints/metrics.pkl',
+                       run_id = None,
                        ):
     #Initialize stuff
     patience_counter = 0
@@ -101,11 +106,12 @@ def train_and_validate(model,
     val_bce_history = []
     val_kld_history = []
     best_val_loss = 10e7
-
+    final_epoch = 0
+    beta_incrementer = max_beta / 50.0
+    beta = start_beta
     
     for epoch_ii  in range(num_epoch):
         print("Epoch {}".format(epoch_ii + 1,))
-        print("Starting Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
 
         #Train
         train_loss,train_bce,train_kld = train(model,beta,train_loader,optimizer, device)
@@ -119,6 +125,9 @@ def train_and_validate(model,
         val_loss_history.append(current_val_loss)
         val_bce_history.append(val_bce)
         val_kld_history.append(val_kld)
+
+        beta += beta_incrementer
+        
         if current_val_loss >= best_val_loss:
             patience_counter+=1
         else:
@@ -127,13 +136,10 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        print("ending Time for Epoch {}:{}".format(epoch_ii + 1, datetime.now()))
-        torch.save(model.state_dict(), '/scratch/work/js11133/sad_data/models/multVAE/multvae_'+str(epoch_ii)+'.pth')
+        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}_epoch_{}.uri'.format(run_id, epoch_ii))
+        final_epoch = epoch_ii
 
-        #End For
       
     metrics= (train_loss_history,train_bce_history,train_kld_history, val_loss_history,val_bce_history,val_kld_history)
-    metrics_file_path = metrics_file_path
-    with open(metrics_file_path, "wb" ) as f:
-        pickle.dump(metrics,f)
-    return train_loss_history,train_bce_history,train_kld_history, val_loss_history,val_bce_history,val_kld_history
+
+    return metrics, final_epoch

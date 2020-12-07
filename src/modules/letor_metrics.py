@@ -211,6 +211,14 @@ def ndcg(df, groupby, ranker, label='label', reverse=False, k=10, dropna=False):
     ndcg_scores = ndcg_scores
     return ndcg_scores
 
+def mrr(df, groupby, ranker, label='label', reverse=False, dropna=False):
+    df = df[[groupby, ranker, label]]
+    df['_a'] = df.groupby(groupby)\
+        [ranker]\
+        .rank(ascending=reverse, method='dense')
+
+    return (df[df[label] > 0]['_a'].astype('float') ** -1).mean()
+
 def verify_qids(df, qids):
     marker = 0
     qid_counter = 0
