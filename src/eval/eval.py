@@ -82,7 +82,7 @@ def __main__():
 	mlflow.log_metric('tau_price', tau_price.mean())
 
 	select_hotels = [895, 473, 80698, 69296, 82110, 44, 2403, 52400, 2600, 4046]
-	joined['select_hotels'] = joined['hotel_id'] in select_hotels
+	joined['select_hotels'] = joined['hotel_id'].isin(select_hotels)
 	lm.mrr(
 		joined,
 		groupby='search_request_id',
