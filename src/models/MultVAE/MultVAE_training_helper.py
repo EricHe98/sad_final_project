@@ -93,7 +93,6 @@ def train_and_validate(model,
                        log_interval = 1,
                        max_patience = 5,
                        run_id = None,
-                       num_layers = 1,
                        save_path = '/scratch/work/js11133/sad_data/models/multVAE/'
                        ):
     #Initialize stuff
@@ -138,7 +137,7 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        mlflow.pytorch.save_model(pytorch_model = model, path = save_path + 'multvae_{}layer_annealed_{}_epoch_{}.uri'.format(num_layers,run_id, epoch_ii))
+        mlflow.pytorch.save_model(pytorch_model = model, path = save_path + 'multvae_{}_annealed_epoch_{}.uri'.format(run_id, epoch_ii))
         final_epoch = epoch_ii
 
       

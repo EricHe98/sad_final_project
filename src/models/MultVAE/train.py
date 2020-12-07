@@ -8,12 +8,6 @@ import argparse
 import mlflow
 import mlflow.pytorch
 
-"""
-TODO:
-    1.) How to rank and calculate ndcg@100/recall@100
-
-
-"""
 parser = argparse.ArgumentParser(description='File Paths for training, validating, and testing')
 parser.add_argument('-tr', 
                     '--train_path', 
@@ -52,7 +46,7 @@ parser.add_argument('-lr',
                     help = 'Learning Rate for model',
                     default = 1e-3)
 parser.add_argument('-hd', 
-                    '--hidden', 
+                    '--hidden_dim', 
                     nargs = '?',
                     type = int,
                     help = 'Size of Hidden Dimension',
@@ -125,7 +119,6 @@ if __name__ == '__main__':
                                                 learning_rate=args.learning_rate,
                                                 max_patience=5,
                                                 run_id = run_id,
-                                                num_layers = args.num_layers,
                                                 save_path = args.save_path,
                                               )
       time_end = dt.datetime.now()
@@ -142,7 +135,7 @@ if __name__ == '__main__':
       mlflow.log_metric('training_time', train_time)
       print('Model trained in {} seconds'.format(train_time))
 
-      mlflow.pytorch.save_model(pytorch_model = model, path = save_path + 'multvae_anneal_{}.uri'.format(run_id))
+      mlflow.pytorch.save_model(pytorch_model = model, path = args.save_path + 'multvae_anneal_{}.uri'.format(run_id))
 
 
 

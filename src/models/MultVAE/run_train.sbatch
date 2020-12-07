@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=64gb
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=abh466@nyu.edu
 #SBATCH --output=slurm_%j.out
@@ -26,8 +26,8 @@ train_dir=/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pk
 val_dir=/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl
 dict_dir=/scratch/work/js11133/sad_data/processed/hotel_hash.json
 save_path=/scratch/work/js11133/sad_data/models/multVAE/
-num_layers=2
+num_layers=1
 learning_rate=1e-3
 hidden=600
 latent=200
-python3 $pyscript -tr $train_dir -v $val_dir -d $dic_dir -s $save_path -l $num_layers -lr $learning_rate -hd $hidden -lt $latent	
+python3 $pyscript -tr $train_dir -v $val_dir -d $dict_dir -s $save_path -l $num_layers -lr $learning_rate -hd $hidden -lt $latent	
