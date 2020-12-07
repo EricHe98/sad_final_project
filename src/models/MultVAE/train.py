@@ -86,24 +86,26 @@ if __name__ == '__main__':
       time_start = dt.datetime.now()
 
       metrics, final_epoch =train_and_validate(
-                                                      model=model,
-                                                      train_loader=train_loader,
-                                                      valid_loader=val_loader,
-                                                      device = device,
-                                                      beta=1.0,
-                                                      num_epoch=400,
-                                                      learning_rate=1e-4,
-                                                      max_patience=5,
-                                                      )
+                                                model=model,
+                                                train_loader=train_loader,
+                                                valid_loader=val_loader,
+                                                device = device,
+                                                start_beta = 0.0,
+                                                max_beta=1.0,
+                                                num_epoch=400,
+                                                learning_rate=1e-3,
+                                                max_patience=5,
+                                                run_id = run_id
+                                              )
       time_end = dt.datetime.now()
       train_time = (time_end - time_start).total_seconds()
 
 
-      with open('checkpoints/metrics.pkl', "wb" ) as f:
+      with open('checkpoints/metrics_{}.pkl'.format(run_id), "wb" ) as f:
         pickle.dump(metrics,f)
 
       #mlflow.log_artifacts('/scratch/work/js11133/sad_data/models/multVAE', artifact_path = 'models_per_epoch')
-      mlflow.log_artifact('checkpoints/metrics.pkl')
+      mlflow.log_artifact('checkpoints/metrics_{}.pkl'.format(run_id))
       
       mlflow.log_metric('Num_epochs', final_epoch + 1)
       mlflow.log_metric('training_time', train_time)

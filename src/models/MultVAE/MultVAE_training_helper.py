@@ -54,7 +54,7 @@ def validate(model,
             valid_loader,
             best_val_loss,
             device,
-            save_path='checkpoints/multvae_basic_model.pth'):
+            save_path='src/models/MultVAE/checkpoints/multvae_basic_model.pth'):
     total_loss = 0
     model.eval()
     loss_per_epoch = 0
@@ -86,11 +86,13 @@ def train_and_validate(model,
                        train_loader,
                        valid_loader,
                        device,
-                       beta = 1.0,
+                       start_beta = 0.0,
+                       max_beta = 1.0,
                        num_epoch = 100,
                        learning_rate = 1e-4,
                        log_interval = 1,
                        max_patience = 5,
+                       run_id = None,
                        ):
     #Initialize stuff
     patience_counter = 0
@@ -105,7 +107,8 @@ def train_and_validate(model,
     val_kld_history = []
     best_val_loss = 10e7
     final_epoch = 0
-
+    beta_incrementer = max_beta / 50.0
+    beta = start_beta
     
     for epoch_ii  in range(num_epoch):
         print("Epoch {}".format(epoch_ii + 1,))
@@ -122,6 +125,9 @@ def train_and_validate(model,
         val_loss_history.append(current_val_loss)
         val_bce_history.append(val_bce)
         val_kld_history.append(val_kld)
+
+        beta += beta_incrementer
+        
         if current_val_loss >= best_val_loss:
             patience_counter+=1
         else:
@@ -130,7 +136,7 @@ def train_and_validate(model,
         print('patience',patience_counter)
         if patience_counter>max_patience:
              break
-        #mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_trial'+str(epoch_ii)+'.uri')
+        mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_{}_epoch_{}.uri'.format(run_id, epoch_ii))
         final_epoch = epoch_ii
 
       

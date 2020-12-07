@@ -19,12 +19,9 @@ module purge
 source ~/.bashrc
 conda activate sad_project_env
 
-cd /home/abh466/sad_final_project/src/models/MultVAE/
-
 # Execute the script
 
 pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train.py
 train_dir=/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl
 val_dir=/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl
-python3 $pyscript -tr $train_dir -v $val_dir &> output_train.txt
-
+python3 $pyscript -tr $train_dir -v $val_dir
