@@ -24,4 +24,10 @@ conda activate sad_project_env
 pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train.py
 train_dir=/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl
 val_dir=/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl
-python3 $pyscript -tr $train_dir -v $val_dir
+dict_dir=/scratch/work/js11133/sad_data/processed/hotel_hash.json
+save_path=/scratch/work/js11133/sad_data/models/multVAE/
+num_layers=2
+learning_rate=1e-3
+hidden=600
+latent=200
+python3 $pyscript -tr $train_dir -v $val_dir -d $dic_dir -s $save_path -l $num_layers -lr $learning_rate -hd $hidden -lt $latent	

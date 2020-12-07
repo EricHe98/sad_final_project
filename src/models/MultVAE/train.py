@@ -10,9 +10,8 @@ import mlflow.pytorch
 
 """
 TODO:
-    1.) Probabilities to 0s and 1s
-    2.) How to rank and calculate ndcg@100/recall@100
-    3.) Put into ML Flow
+    1.) How to rank and calculate ndcg@100/recall@100
+
 
 """
 parser = argparse.ArgumentParser(description='File Paths for training, validating, and testing')
@@ -34,6 +33,36 @@ parser.add_argument('-d',
                     type = str,
                     help = 'Dictionary path',
                     default = '/scratch/work/js11133/sad_data/processed/hotel_hash.json')
+parser.add_argument('-s', 
+                    '--save_path', 
+                    nargs = '?',
+                    type = str,
+                    help = 'models save path',
+                    default = '/scratch/work/js11133/sad_data/models/multVAE/')
+parser.add_argument('-l', 
+                    '--num_layers', 
+                    nargs = '?',
+                    type = int,
+                    help = 'Number of hidden layers in MultVAE encoder and Decoder',
+                    default = 1)
+parser.add_argument('-lr', 
+                    '--learning_rate', 
+                    nargs = '?',
+                    type = float,
+                    help = 'Learning Rate for model',
+                    default = 1e-3)
+parser.add_argument('-hd', 
+                    '--hidden', 
+                    nargs = '?',
+                    type = int,
+                    help = 'Size of Hidden Dimension',
+                    default = 600)
+parser.add_argument('-lt', 
+                    '--latent_dim', 
+                    nargs = '?',
+                    type = int,
+                    help = 'Size of Latent Dimension',
+                    default = 200)
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -66,20 +95,20 @@ if __name__ == '__main__':
       
       mlflow.log_param('device', device)
       mlflow.log_param('hotel_dim', hotel_length)
-      mlflow.log_param('hidden_dim', 600)
-      mlflow.log_param('latent_dim', 200)
+      mlflow.log_param('hidden_dim', args.hidden_dim)
+      mlflow.log_param('latent_dim', args.latent_dim)
       mlflow.log_param('dropout', 0.5)
       mlflow.log_param('beta', 1.0)
-      mlflow.log_param('learning_rate', 1e-4)
-      mlflow.log_param('n_enc_hidden_layers', 1)
-      mlflow.log_param('n_dec_hidden_layers', 1)
+      mlflow.log_param('learning_rate', args.learning_rate)
+      mlflow.log_param('n_enc_hidden_layers', args.num_layers)
+      mlflow.log_param('n_dec_hidden_layers', args.num_layers)
 
       # train, validate ..
       model = MultVae(item_dim=hotel_length,
-                      hidden_dim=600,
-                      latent_dim=200,
-                      n_enc_hidden_layers = 1,
-                      n_dec_hidden_layers = 1,
+                      hidden_dim=args.hidden_dim,
+                      latent_dim=args.latent_dim,
+                      n_enc_hidden_layers = args.num_layers,
+                      n_dec_hidden_layers = args.num_layers,
                       dropout = 0.5
                      )
       model.to(device)
@@ -93,9 +122,11 @@ if __name__ == '__main__':
                                                 start_beta = 0.0,
                                                 max_beta=1.0,
                                                 num_epoch=400,
-                                                learning_rate=1e-3,
+                                                learning_rate=args.learning_rate,
                                                 max_patience=5,
-                                                run_id = run_id
+                                                run_id = run_id,
+                                                num_layers = args.num_layers,
+                                                save_path = args.save_path,
                                               )
       time_end = dt.datetime.now()
       train_time = (time_end - time_start).total_seconds()
@@ -111,7 +142,7 @@ if __name__ == '__main__':
       mlflow.log_metric('training_time', train_time)
       print('Model trained in {} seconds'.format(train_time))
 
-      mlflow.pytorch.save_model(pytorch_model = model, path = '/scratch/work/js11133/sad_data/models/multVAE/multvae_anneal_{}.uri'.format(run_id))
+      mlflow.pytorch.save_model(pytorch_model = model, path = save_path + 'multvae_anneal_{}.uri'.format(run_id))
 
 
 
