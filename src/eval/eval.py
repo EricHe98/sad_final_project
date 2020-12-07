@@ -39,6 +39,8 @@ def __main__():
 
 	mlflow.start_run(args.run_id)
 
+	mlflow.log_param('evaluation_set', args.split)
+
 	pred_file = 'predictions/{}/{}/{}/predictions.parquet'\
 	    .format(args.run_id, args.dataset, args.split)
 	pred = pd.read_parquet(pred_file)
