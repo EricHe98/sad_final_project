@@ -86,7 +86,8 @@ def train_and_validate(model,
                        train_loader,
                        valid_loader,
                        device,
-                       beta = 1.0,
+                       start_beta = 0.0,
+                       max_beta = 1.0,
                        num_epoch = 100,
                        learning_rate = 1e-4,
                        log_interval = 1,
@@ -106,7 +107,8 @@ def train_and_validate(model,
     val_kld_history = []
     best_val_loss = 10e7
     final_epoch = 0
-
+    beta_incrementer = max_beta / 50.0
+    beta = start_beta
     
     for epoch_ii  in range(num_epoch):
         print("Epoch {}".format(epoch_ii + 1,))
@@ -123,6 +125,9 @@ def train_and_validate(model,
         val_loss_history.append(current_val_loss)
         val_bce_history.append(val_bce)
         val_kld_history.append(val_kld)
+
+        beta += beta_incrementer
+        
         if current_val_loss >= best_val_loss:
             patience_counter+=1
         else:

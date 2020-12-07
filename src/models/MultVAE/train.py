@@ -86,16 +86,17 @@ if __name__ == '__main__':
       time_start = dt.datetime.now()
 
       metrics, final_epoch =train_and_validate(
-                                                      model=model,
-                                                      train_loader=train_loader,
-                                                      valid_loader=val_loader,
-                                                      device = device,
-                                                      beta=1.0,
-                                                      num_epoch=400,
-                                                      learning_rate=1e-3,
-                                                      max_patience=5,
-                                                      run_id = run_id
-                                                      )
+                                                model=model,
+                                                train_loader=train_loader,
+                                                valid_loader=val_loader,
+                                                device = device,
+                                                start_beta = 0.0,
+                                                max_beta=1.0,
+                                                num_epoch=400,
+                                                learning_rate=1e-3,
+                                                max_patience=5,
+                                                run_id = run_id
+                                              )
       time_end = dt.datetime.now()
       train_time = (time_end - time_start).total_seconds()
 
