@@ -108,7 +108,7 @@ def train_and_validate(model,
     val_kld_history = []
     best_val_loss = 10e7
     final_epoch = 0
-    beta_incrementer = max_beta / 50.0
+    beta_incrementer = max_beta /200.0
     beta = start_beta
     
     for epoch_ii  in range(num_epoch):
