@@ -9,11 +9,9 @@ import numpy as np
 import pandas as pd
 
 import mlflow
+import mlflow.pytorch
 import torch
-from torch.utils.data import Dataset
-from MultVAE_Dataset import BasicHotelDataset
 from scipy import sparse
-import src.modules.letor_metrics as lm
 
 import argparse
 parser = argparse.ArgumentParser(description='Use MultVAE model to predict on validation set.')
@@ -33,7 +31,7 @@ parser.add_argument('-n',
                     )
                     
 parser.add_argument('-e',
-                    '--epoch-to-generate', 
+                    '--epoch', 
                     type = int,
                     required=True,
                     help='max epoch, the last epoch that you want to validate towards',
@@ -60,14 +58,14 @@ parser.add_argument('-u',
                     type = str,
                     help='user_hash.json. Check make_hashes.py for info on the hash',
                     default ='/scratch/abh466/sad_data/processed/user_hash.json')
-'''                    
+                    
 parser.add_argument('-o',
                     '--output_dir', 
                     nargs = '?',
                     type = str,
                     help='output directory where embeddings will go',
                    )
-'''
+
 args = parser.parse_args()
 
 def densify_sparse_vec(user_interaction_dict, hotel_length):
@@ -88,14 +86,14 @@ def gen_user_emb(
                 user_hash ,
                 output_dir
                 ):
-    if torch.cuda.is_available():
+   # if torch.cuda.is_available():
 
-        device = torch.device("cuda")
-        print('There are %d GPU(s) available.' % torch.cuda.device_count())
-        print('We will use the GPU:', torch.cuda.get_device_name(0))
-    else:
-        print('No GPU available, using the CPU instead.')
-        device = torch.device("cpu") 
+   #     device = torch.device("cuda")
+   #     print('There are %d GPU(s) available.' % torch.cuda.device_count())
+   #     print('We will use the GPU:', torch.cuda.get_device_name(0))
+   # else:
+   #     print('No GPU available, using the CPU instead.')
+    device = torch.device("cpu") 
 
     with open(dataset_pkl_path,'rb') as f:
         user_to_query_struct = pickle.load(f)
@@ -109,44 +107,49 @@ def gen_user_emb(
     #invert the maps so we can go back to user_id
     user_idx_to_user_id = {v: k for k, v in user_id_indexed.items()}
     
-    model_name = 'multvae_{0}_epoch_{1}.uri'.format(model_run_id,str(int(epoch)))
+    model_name = 'multvae_{0}_annealed_epoch_{1}.uri'.format(model_run_id,str(int(epoch)))
     model_path = os.path.join(model_folder,model_name)
-    model_path_list.append(model_path)
 
     model = mlflow.pytorch.load_model(model_path)
     print('Loaded model from ',model_path) 
     model.to(device)
+    model.eval()
     print('loading done')
     #pd.DataFrame(df[0].values.tolist())
     lat_df = pd.DataFrame(columns=['user_id', 'latent'])
-    
+
     for user in user_to_query_struct.keys():
         x, _ = densify_sparse_vec(user_to_query_struct[user][1], hotel_length)
-        x.to(device)
-        emb, _ = model.MultVAE_encoder(x.unsqueeze(dim=0))
+        x.unsqueeze(dim = 0).to(device)
+        emb, logvar  = model.encoder(x)
         user_id = user_idx_to_user_id[user]
-        lat_df.append({'user_id':user_id, 'latent': list(emb.cpu().detach().squeeze())})
+ 
+        lat_df = lat_df.append({'user_id':user_id, 'latent':list(map(float,list(emb.cpu().detach().squeeze())))}, ignore_index = True)
 
-    lat_df = pd.DataFrame(lat_df['latent'].values.tolist())
-
+    lat_df = pd.concat([lat_df.user_id, pd.DataFrame(lat_df.latent.values.tolist())], axis = 1)   
+    columns = ['user_id']
+    latents = ['latent_{}'.format(i) for i in range(200)]
+    for i in latents:
+        columns.append(i)
+    lat_df.columns = columns
     return lat_df
 
 if __name__ == '__main__':
     model_folder= args.model_folder
     model_run_id= args.model_run_id
-    max_epoch = args.max_epoch
+    epoch = args.epoch
     dataset_pkl_path = args.dataset_pkl
     hotel_hash = args.hotel_hash
     user_hash = args.user_hash
-    #output_dir = args.output_dir
+    output_dir = args.output_dir
     
     lat_df = gen_user_emb(
                 model_folder =model_folder,
                 model_run_id=model_run_id,
-                max_epoch=max_epoch,
+                epoch=epoch,
                 dataset_pkl_path = dataset_pkl_path,
                 hotel_hash = hotel_hash,
                 user_hash = user_hash,
-                #output_dir = output_dir
+                output_dir = output_dir
                )
-    print(lat_df.head)
+    lat_df.to_parquet(output_dir+'train_emb.parquet')

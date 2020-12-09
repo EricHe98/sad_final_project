@@ -21,12 +21,12 @@ conda activate sad_project_env
 
 # Execute the script
 
-pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train.py
-model_dir=/scratch/abh466/sad_data/model/multVAE/
+pyscript=/home/abh466/sad_final_project/src/models/MultVAE/gen_user_latent.py
+model_dir=/scratch/abh466/sad_data/models/multVAE/
 model_run_id=50fbe8aa06e24238890d1ab10fdf2c1d 
 epoch=199 
-train_dir=/scratch/abh466/sad_data/processed/full/val/user_to_queries.pkl
+train_dir=/scratch/abh466/sad_data/processed/full/test/user_to_queries.pkl
 hotel_dir=/scratch/abh466/sad_data/processed/hotel_hash.json
 user_dir=/scratch/abh466/sad_data/processed/user_hash.json
-
-python3 $pyscript -m $model_dir -n $model_run_id -e $epoch -d $train_dir -i $hotel_dir -u $user_dir
+output_dir=/scratch/abh466/sad_data/processed/full/test/
+python3 $pyscript -m $model_dir -n $model_run_id -e $epoch -d $train_dir -i $hotel_dir -u $user_dir -o $output_dir
