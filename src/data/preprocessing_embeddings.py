@@ -30,6 +30,9 @@ def write_set_to_file(filename, a_set):
             f.write(f"{item}\n")
 
 def gen_neg_pairs_out_session(neg_list, pos_list, hotel_ids, num_neg_samples=5):
+    if num_neg_samples == 0:
+        return []
+
     neg_pairs = []
     neg_hotels = hotel_ids - set(pos_list)
     for target_i, target_word in enumerate(pos_list):
@@ -53,6 +56,9 @@ def gen_pos_pairs(pos_list, window_size=5):
 
 # TODO: room for improvement in changing distribution of negative samples (recip, piece-wise)
 def gen_neg_pairs_in_session(neg_list, pos_list, num_neg_samples=5):
+    if num_neg_samples == 0:
+        return []
+    
     neg_pairs = []
     for target_i, target_word in enumerate(pos_list):
         num_samples = num_neg_samples
