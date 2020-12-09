@@ -24,7 +24,7 @@ export PYTHONPATH="./"
 
 # Execute the script
 
-python src/models/xgbclassifier/predict.py 324637d65e1a403b9ba3b2ad3c663a56 full test
+python src/models/xgbclassifier/predict.py 315fe1cd0ee84257ab01cc7d4b3d2ec1 full test
 
 # And we're done!
 
