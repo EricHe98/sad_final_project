@@ -22,6 +22,6 @@ conda activate sad_project_env
 export PYTHONPATH="./"
 
 pyscript=/home/abh466/sad_final_project/src/models/lambdamart_user_latent/train.py
-train_dir=/scratch/abh466/sad_data/raw/full/train
-latent_dir=/scratch/abh466/sad_data/processed/full/train/user_latent_train.parquet
+train_dir=/scratch/work/js11133/sad_data/raw/full/train
+latent_dir=/scratch/work/js11133/sad_data/processed/full/train/user_latent_train.parquet
 python3 -u $pyscript -d $train_dir -l $latent_dir

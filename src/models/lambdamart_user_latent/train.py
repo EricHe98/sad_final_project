@@ -43,7 +43,7 @@ def __main__():
     latents = pd.read_parquet(args.latent)
     print('finish read')
     data.dropna(subset=['user_id'],inplace=True)
-    print('finish drop'))
+    print('finish drop')
     with open(features_path, 'r') as features:
         model_feature_schemas = json.load(features)
         model_features = [f['name'] for f in model_feature_schemas if f['train']]
@@ -61,7 +61,7 @@ def __main__():
         run_id = mlflow.active_run().info.run_id
         print('MLFlow Run ID is: {}'.format(run_id))
         mlflow.log_param('dataset', args.dataset)
-        mlflow.log_param('train_split', args.split)
+#        mlflow.log_param('train_split', args.split)
         mlflow.log_param('model_name', 'lambdamart')
         mlflow.log_param('run_id', run_id)
         # n_jobs=-1 is supposed to mean use all cores available
