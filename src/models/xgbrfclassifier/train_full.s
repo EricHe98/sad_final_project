@@ -23,7 +23,7 @@ pipenv shell
 export PYTHONPATH="./"
 
 # Execute the script
-python src/models/lambdamart/train.py full 
+python src/models/xgbrfclassifier/train.py full 
 
 # And we're done!
 
