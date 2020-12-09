@@ -41,16 +41,18 @@ features_path = 'src/data/schemas/output_data_schemas.json'
 def __main__():
     data = read_parquet(args.dataset)
     latents = pd.read_parquet(args.latent)
-
+    print('finish read')
+    data.dropna(subset=['user_id'],inplace=True)
+    print('finish drop'))
     with open(features_path, 'r') as features:
         model_feature_schemas = json.load(features)
         model_features = [f['name'] for f in model_feature_schemas if f['train']]
     latent_features = ['latent_{}'.format(i) for i in range(200)]
     for i in latent_features:
         model_features.append(i)
-    data = data.join(latents, on = 'user_id')
-    print(data.head())
-'''
+    data = data.join(latents, on = 'user_id', how = 'left', lsuffix = '_left', rsuffix = '_right')
+
+    print('data joined')
     X, y, qid = feature_label_split(data, model_features, qid='search_request_id')
     X = X.astype('float')
 
@@ -65,7 +67,7 @@ def __main__():
         # n_jobs=-1 is supposed to mean use all cores available
         # however n_jobs=-1 seems to only be parallelized on latest xgboost version 1.3.0rc1
         # make sure to check, otherwise manually set n_jobs to number of cores available
-        model = XGBRanker(objective='rank:ndcg', verbosity=2, n_jobs=-1, n_estimators=10)
+        model = XGBRanker(objective='rank:ndcg', verbosity=2, n_jobs=-1, n_estimators=100)
         mlflow.log_params(model.get_params())
         time_start = dt.datetime.now()
         model.fit(X, y, qid)
@@ -76,6 +78,6 @@ def __main__():
         print('Model trained in {}'.format(train_time))
 
         mlflow.xgboost.log_model(model, 'model.json')
-'''  
+  
 if __name__ == '__main__':
     __main__()
