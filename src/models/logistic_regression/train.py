@@ -31,7 +31,7 @@ with open(features_path, 'r') as features:
     model_features = [f['name'] for f in model_feature_schemas if f['train']]
 
 model_features = ['hotel_cumulative_share', 'srq_price_zscore', 'previous_user_hotel_interaction',
-    'srq_rewards_zscore', 'travel_intent', 'srq_distance_zscore', 'user_preferred_price']
+    'srq_rewards_zscore', 'travel_intent', 'srq_distance_zscore', 'user_preferred_price', 'label']
 
 def __main__():
     data = read_parquet(os.path.join(data_path, args.dataset, args.split), columns=model_features)
