@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=2:00:00
+#SBATCH --time=1:00:00
 #SBATCH --mem=256GB
 #SBATCH --job-name=dsga3001-lab0
 #SBATCH --mail-type=END
@@ -23,7 +23,10 @@ pipenv shell
 export PYTHONPATH="./"
 
 # Execute the script
-python src/models/lambdamart/predict.py $RUN_ID full test
+echo "Executing the following"
+echo "python src/models/lambdamart/predict.py ${RUN_ID} full test"
+
+python src/models/lambdamart/predict.py 85de25cc54c2416b9ac824037675a311 full test
 
 # And we're done!
 
