@@ -92,7 +92,7 @@ if __name__ == '__main__':
       mlflow.log_param('hidden_dim', args.hidden_dim)
       mlflow.log_param('latent_dim', args.latent_dim)
       mlflow.log_param('dropout', 0.5)
-      mlflow.log_param('beta', 1.0)
+      mlflow.log_param('beta', 'annealed_to halfway')
       mlflow.log_param('learning_rate', args.learning_rate)
       mlflow.log_param('n_enc_hidden_layers', args.num_layers)
       mlflow.log_param('n_dec_hidden_layers', args.num_layers)

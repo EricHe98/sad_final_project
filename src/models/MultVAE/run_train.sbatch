@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=64gb
 #SBATCH --gres=gpu:1
-#SBATCH --time=48:00:00
+#SBATCH --time=72:00:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=abh466@nyu.edu
 #SBATCH --output=slurm_%j.out
@@ -22,10 +22,10 @@ conda activate sad_project_env
 # Execute the script
 
 pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train.py
-train_dir=/scratch/work/js11133/sad_data/processed/full/train/user_to_queries.pkl
-val_dir=/scratch/work/js11133/sad_data/processed/full/val/user_to_queries.pkl
-dict_dir=/scratch/work/js11133/sad_data/processed/hotel_hash.json
-save_path=/scratch/work/js11133/sad_data/models/multVAE/
+train_dir=/scratch/abh466/sad_data/processed/full/train/user_to_queries.pkl
+val_dir=/scratch/abh466/sad_data/processed/full/val/user_to_queries.pkl
+dict_dir=/scratch/abh466/sad_data/processed/hotel_hash.json
+save_path=/scratch/abh466/sad_data/models/multVAE/
 num_layers=1
 learning_rate=1e-3
 hidden=600
