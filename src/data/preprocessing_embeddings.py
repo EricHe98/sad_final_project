@@ -15,6 +15,7 @@ import json
 import pickle
 import sys
 import traceback
+from pathlib import Path
 
 from src.data.preprocessing import read_parquet
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         help='which split of the dataset to train on (train, val, test)')
     parser.add_argument('--data', type=str, default='data/raw', required=True,
         help='path to data dir')
-    parset.add_argument('--out_dir', type=str, required=True, 'output directory')
+    parser.add_argument('--out_dir', type=str, required=True, help='output directory')
     parser.add_argument('--in_samples', type=int, default=5,
         help='number of samples in context')
     parser.add_argument('--out_samples', type=int, default=5,
@@ -128,6 +129,7 @@ if __name__ == "__main__":
         list_neg_out_pairs.extend(gen_neg_pairs_out_session(neg_list, pos_list, hotel_ids, num_neg_samples=args.out_samples))
 
     print("Writing results to file")
+    Path(args.out_dir).mkdir(parents=True, exist_ok=True)
     append_pairs_to_file(list_pos_pairs, os.path.join(args.out_dir, POS_PAIRS_FILENAME))
     append_pairs_to_file(list_neg_in_pairs, os.path.join(args.out_dir, NEG_PAIRS_FILENAME))
     append_pairs_to_file(list_neg_out_pairs, os.path.join(args.out_dir, NEG_PAIRS_FILENAME))
