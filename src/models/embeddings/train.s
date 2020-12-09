@@ -13,7 +13,7 @@
 module purge
 
 # Move into the directory that contains our code
-SRCDIR=/scratch/js11133/sad_final_project
+SRCDIR=/home/js11133/sad_final_project
 cd $SRCDIR
 
 # Activate pipenv shell
