@@ -94,7 +94,7 @@ def __main__():
         # can be loaded in using mlflow.spark.load_model
         # see https://www.mlflow.org/docs/latest/python_api/mlflow.pyfunc.html#mlflow.pyfunc.load_model
         # for loading options; I use the "runs" method to load in the predict script
-        mlflow.spark.log_model(model, 'als') 
+        mlflow.spark.log_model(model, 'model') 
 
 if __name__ == '__main__':
     __main__()

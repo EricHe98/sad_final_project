@@ -47,6 +47,7 @@ def __main__():
 	pred_file = 'predictions/{}/{}/{}/predictions.parquet'\
 	    .format(args.run_id, args.dataset, args.split)
 	pred = pd.read_parquet(pred_file)
+	pred = pred[['search_request_id', 'hotel_id', 'score']]
 
 	join_keys=['search_request_id', 'hotel_id']
 	joined = data.set_index(join_keys)\
