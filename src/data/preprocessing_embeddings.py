@@ -87,10 +87,12 @@ if __name__ == "__main__":
         help='which split of the dataset to train on (train, val, test)')
     parser.add_argument('--data', type=str, default='data/raw', required=True,
         help='path to data dir')
+    parset.add_argument('--out_dir', type=str, required=True, 'output directory')
     parser.add_argument('--in_samples', type=int, default=5,
         help='number of samples in context')
     parser.add_argument('--out_samples', type=int, default=5,
         help='number of samples out of context')
+
 
     args = parser.parse_args()
 
@@ -120,9 +122,9 @@ if __name__ == "__main__":
         list_neg_out_pairs.extend(gen_neg_pairs_out_session(neg_list, pos_list, hotel_ids, num_neg_samples=args.out_samples))
 
     print("Writing results to file")
-    append_pairs_to_file(list_pos_pairs, POS_PAIRS_FILENAME)
-    append_pairs_to_file(list_neg_in_pairs, NEG_PAIRS_FILENAME)
-    append_pairs_to_file(list_neg_out_pairs, NEG_PAIRS_FILENAME)
+    append_pairs_to_file(list_pos_pairs, os.path.join(args.out_dir, POS_PAIRS_FILENAME))
+    append_pairs_to_file(list_neg_in_pairs, os.path.join(args.out_dir, NEG_PAIRS_FILENAME))
+    append_pairs_to_file(list_neg_out_pairs, os.path.join(args.out_dir, NEG_PAIRS_FILENAME))
 
     set_hotels_in_train = set(lists_to_list(list_pos_pairs) + lists_to_list(list_neg_in_pairs) + lists_to_list(list_neg_out_pairs))
-    write_set_to_file(HOTELS_FILENAME, set_hotels_in_train)
+    write_set_to_file(os.path.join(args.out_dir, HOTELS_FILENAME), set_hotels_in_train)
