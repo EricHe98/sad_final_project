@@ -48,7 +48,7 @@ def __main__():
         # n_jobs=-1 is supposed to mean use all cores available
         # however n_jobs=-1 seems to only be parallelized on latest xgboost version 1.3.0rc1
         # make sure to check, otherwise manually set n_jobs to number of cores available
-        model = XGBRanker(objective='rank:ndcg', verbosity=2, n_jobs=-1, n_estimators=10)
+        model = XGBRanker(objective='rank:ndcg', verbosity=2, n_jobs=-1, n_estimators=100)
         mlflow.log_params(model.get_params())
         time_start = dt.datetime.now()
         model.fit(X, y, qid)
