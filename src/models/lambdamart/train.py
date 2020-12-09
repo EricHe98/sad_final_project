@@ -18,7 +18,7 @@ import mlflow
 import argparse 
 
 parser = argparse.ArgumentParser(description='Use LambdaMART example model to predict on validation set.')
-parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
+parser.add_argument('dataset', choices=['small_100', 'small_all', 'full', 'downsampled'],
     help='which dataset to train the model (small_100, small_all, all) to be included in MLFlow name')
 parser.add_argument('--split', choices=['train', 'val', 'test'], default='train',
     help='which split of the dataset to train on (train, val, test)')
