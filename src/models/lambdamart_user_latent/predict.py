@@ -17,13 +17,34 @@ import mlflow
 
 import argparse
 parser = argparse.ArgumentParser(description='Use LambdaMART example model to predict on validation set.')
-parser.add_argument('run_id', type=str, 
-    help='Run ID for saving models')
-parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
-    help='which dataset to predict on (small_100, small_all, all)')
-parser.add_argument('split', choices=['train', 'val', 'test'],
-	help='which split of the dataset to predict on (train, val, test)')
+parser.add_argument('-r',
+					'--run_id',
+					type=str, 
+    				help='Run ID for saving models')
 
+parser.add_argument('-d',
+                    '--dataset', 
+                    nargs = '?',
+                    type = str,
+                    help='data_directory',
+                    default = '/scratch/abh466/sad_data/raw/full/test'
+                   )
+
+parser.add_argument('-l',
+                    '--latent', 
+                    nargs = '?',
+                    type = str,
+                    help='embedding_directory',
+                    default = '/scratch/abh466/sad_data/processed/full/test/user_latent_test.parquet'
+                   )
+
+parser.add_argument('-s',
+                    '--split', 
+                    nargs = '?',
+                    type = str,
+                    help='type of split',
+                    default = 'test'
+                   )
 args = parser.parse_args()
 
 features_path = 'src/data/schemas/output_data_schemas.json'
@@ -31,12 +52,24 @@ features_path = 'src/data/schemas/output_data_schemas.json'
 def __main__():
 	mlflow.start_run(run_id=args.run_id)
 
-	data = read_parquet(os.path.join('data/raw', args.dataset, args.split))
+	data = read_parquet(args.dataset)
+	latents = pd.read_parquet(args.latent)
+
+    print('finish read')
+    data.dropna(subset=['user_id'],inplace=True)
+    print('finish drop')
 	# set display_rank to a constant to avoid feature leakage
 	data['display_rank'] = 10
 	with open(features_path, 'r') as features:
 	    model_feature_schemas = json.load(features)
 	    model_features = [f['name'] for f in model_feature_schemas if f['train']]
+
+	latent_features = ['latent_{}'.format(i) for i in range(200)]
+    for i in latent_features:
+        model_features.append(i)
+    
+    data = data.join(latents, on = 'user_id', how = 'left', lsuffix = '_left', rsuffix = '_right')
+    print('finish join')
 
 	X, y, qid = feature_label_split(data, model_features, qid='search_request_id')
 	X = X.astype('float')
@@ -51,7 +84,7 @@ def __main__():
 	    ['score']\
 	    .rank(ascending=False)
 
-	predictions_path = 'predictions/{}/{}/{}'.format(args.run_id, args.dataset, args.split)
+	predictions_path = 'predictions/{}/full/{}'.format(args.run_id, args.split)
 	if not os.path.exists(predictions_path):
 		os.makedirs(predictions_path)
 	predictions_file = os.path.join(predictions_path, 'predictions.parquet')
