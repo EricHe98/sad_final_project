@@ -34,10 +34,12 @@ with open(features_path, 'r') as features:
 model_features = ['hotel_cumulative_share', 'srq_price_zscore', 'previous_user_hotel_interaction',
 	'srq_rewards_zscore', 'travel_intent', 'srq_distance_zscore', 'user_preferred_price']
 
+id_features = ['search_request_id', 'hotel_id','user_id']
+
 def __main__():
 	mlflow.start_run(run_id=args.run_id)
 
-	data = read_parquet(os.path.join('data/raw', args.dataset, args.split), columns=model_features)
+	data = read_parquet(os.path.join('data/raw', args.dataset, args.split), columns=model_features + id_features)
 	# set display_rank to a constant to avoid feature leakage
 	data['display_rank'] = 10
 
