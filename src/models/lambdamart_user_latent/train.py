@@ -32,7 +32,7 @@ parser.add_argument('-l',
                     nargs = '?',
                     type = str,
                     help='embedding_directory',
-                    default = '/scratch/abh466/sad_data/processed/full/test/train_emb.parquet'
+                    default = '/scratch/abh466/sad_data/processed/full/train/train_emb.parquet'
                    )
 args = parser.parse_args()
 
@@ -49,10 +49,12 @@ def __main__():
     for i in latent_features:
         model_features.append(i)
     data = data.join(latents, on = 'user_id')
+    print(data.head())
+'''
     X, y, qid = feature_label_split(data, model_features, qid='search_request_id')
     X = X.astype('float')
 
-'''
+
     with mlflow.start_run(run_name='lambdamart'):
         run_id = mlflow.active_run().info.run_id
         print('MLFlow Run ID is: {}'.format(run_id))
