@@ -21,7 +21,7 @@ conda activate sad_project_env
 
 # Execute the script
 
-pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train.py
+pyscript=/home/abh466/sad_final_project/src/models/MultVAE/train_preloaded.py
 train_dir=/scratch/abh466/sad_data/processed/full/train/user_to_queries.pkl
 val_dir=/scratch/abh466/sad_data/processed/full/val/user_to_queries.pkl
 dict_dir=/scratch/abh466/sad_data/processed/hotel_hash.json
@@ -30,4 +30,6 @@ num_layers=1
 learning_rate=1e-3
 hidden=600
 latent=200
-python3 $pyscript -tr $train_dir -v $val_dir -d $dict_dir -s $save_path -l $num_layers -lr $learning_rate -hd $hidden -lt $latent	
+model_id=50fbe8aa06e24238890d1ab10fdf2c1d
+epoch=199
+python3 $pyscript -tr $train_dir -v $val_dir -d $dict_dir -s $save_path -l $num_layers -lr $learning_rate -hd $hidden -lt $latent -n $model_id -e $epoch		

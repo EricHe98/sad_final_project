@@ -111,8 +111,7 @@ if __name__ == '__main__':
       mlflow.log_param('n_dec_hidden_layers', args.num_layers)
 
       model_name = 'multvae_{}_annealed_epoch_{}.uri'.format(args.model_run_id,args.epoch)
-      model_path = os.path.join(save_path,model_name)
-      model_path_list.append(model_path)
+      model_path = os.path.join(args.save_path,model_name)
 
       model = mlflow.pytorch.load_model(model_path)
       model.to(device)
@@ -125,7 +124,7 @@ if __name__ == '__main__':
                                                 device = device,
                                                 start_beta = 1.0,
                                                 max_beta=1.0,
-                                                num_epoch=400,
+                                                num_epoch=450,
                                                 learning_rate=args.learning_rate,
                                                 max_patience=5,
                                                 run_id = run_id,
