@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 import mlflow
+import mlflow.pytorch
 import torch
 from torch.utils.data import Dataset
 from MultVAE_Dataset import BasicHotelDataset
