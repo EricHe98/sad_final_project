@@ -22,7 +22,7 @@ conda activate sad_project_env
 export PYTHONPATH="./"
 
 pyscript=/home/abh466/sad_final_project/src/models/lambdamart_user_latent/predict.py
-run_id=
+run_id=cc7ecd02ec004c53811da66e9e951071
 test_dir=/scratch/work/js11133/sad_data/raw/full/test
 latent_dir=/scratch/work/js11133/sad_data/processed/full/test/user_latent_test.parquet
 split=test
