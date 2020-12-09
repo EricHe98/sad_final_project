@@ -81,14 +81,22 @@ def lists_to_list(nested_lists):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate hotel pos/neg pairs.')
-    parser.add_argument('--data', type=str, required=True,
-                        help='path to sad data folder')
+    parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
+    help='which dataset to train the model (small_100, small_all, all) to be included in MLFlow name')
+    parser.add_argument('--split', choices=['train', 'val', 'test'], default='train',
+        help='which split of the dataset to train on (train, val, test)')
+    parser.add_argument('--data', type=str, default='data/raw', required=True,
+        help='path to data dir')
+    parser.add_argument('--in_samples', type=int, default=5,
+        help='number of samples in context')
+    parser.add_argument('--out_samples', type=int, default=5,
+        help='number of samples out of context')
 
     args = parser.parse_args()
 
     sc = SparkContext.getOrCreate()
     sqlContext = SQLContext(sc)
-    data = sqlContext.read.parquet(args.data).select(COLUMNS_TO_READ)
+    data = sqlContext.read.parquet(os.path.join(args.data, args.dataset, args.split)).select(COLUMNS_TO_READ)
 
     hotel_ids = set(data.select('hotel_id').distinct().rdd.flatMap(lambda x: x).collect())
     session_ids = data.select('session_id').distinct()
@@ -108,8 +116,8 @@ if __name__ == "__main__":
         neg_list = context_list.filter(context_list.label == 0).select('hotel_id').rdd.flatMap(lambda x: x).collect()
 
         list_pos_pairs.extend(gen_pos_pairs(pos_list))
-        list_neg_in_pairs.extend(gen_neg_pairs_in_session(neg_list, pos_list))
-        list_neg_out_pairs.extend(gen_neg_pairs_out_session(neg_list, pos_list, hotel_ids))
+        list_neg_in_pairs.extend(gen_neg_pairs_in_session(neg_list, pos_list, num_neg_samples=args.in_samples))
+        list_neg_out_pairs.extend(gen_neg_pairs_out_session(neg_list, pos_list, hotel_ids, num_neg_samples=args.out_samples))
 
     print("Writing results to file")
     append_pairs_to_file(list_pos_pairs, POS_PAIRS_FILENAME)
