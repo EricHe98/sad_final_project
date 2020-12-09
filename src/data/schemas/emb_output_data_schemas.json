@@ -1,0 +1,732 @@
+[{
+      "name": "search_result_id",
+      "type": "bigint",
+      "train": false,
+      "tables": ["search_result_stats"],
+      "description": "ID of search result"
+    },
+    {
+      "name": "search_request_id",
+      "type": "bigint",
+      "train": false,
+      "tables": ["search_result_stats"],
+      "description": "ID of search request"
+    },
+    {
+      "name": "hotel_id",
+      "type": "bigint",
+      "train": false,
+      "tables": ["search_result_stats"],
+      "description": "ID of hotel"
+    },
+    {
+      "name": "product_name",
+      "type": "varchar(16)",
+      "train": false,
+      "tables": ["search_result_stats"],
+      "description": "Which product line"
+    },
+    {
+      "name": "session_id",
+      "type": "varchar(64)",
+      "train": false,
+      "tables": ["search_result_stats"],
+      "description": "ID of user session"
+    },
+    {
+      "name": "search_type",
+      "type": "varchar(16)",
+      "train": false,
+      "tables": ["search_request_stats"],
+      "description": "Whether the search type is earn, burn or discount"
+    },
+    {
+      "name": "search_type_id",
+      "type": "int",
+      "train": false,
+      "tables": ["search_request_stats"],
+      "description": "1 if earn, 2 if burn, 3 if disc"
+    },
+    {
+      "name": "user_id",
+      "type": "bigint",
+      "train": false,
+      "tables": ["search_request_stats"],
+      "description": "ID of user"
+    },
+    {
+      "name": "reward_program_slug",
+      "type": "varchar(32)",
+      "train": false,
+      "description": "Name of reward program"
+    },
+    {
+      "name": "reward_program_hash",
+      "type": "bigint",
+      "train": true,
+      "description": "ID of reward program"
+    },
+    {
+      "name": "site_slug",
+      "type": "varchar(32)",
+      "train": false,
+      "description": "Name of site"
+    },
+    {
+      "name": "region_id",
+      "type": "bigint",
+      "train": false,
+      "description": "ID of hotel region"
+    },
+    {
+      "name": "place_id",
+      "type": "varchar(256)",
+      "train": false,
+      "tables": ["search_request_stats"],
+      "description": "Agoda place"
+    },
+    {
+      "name": "promotion_id",
+      "type": "bigint",
+      "train": false,
+      "description": "ID of promotion"
+    },
+    {
+      "name": "qid",
+      "type": "bigint",
+      "train": false,
+      "description": "Train data query partition"
+    },
+    {
+      "name": "holdout_srq",
+      "type": "boolean",
+      "train": false,
+      "description": "Whether the search result belongs to a search request in the holdout dataset"
+    },
+    {
+      "name": "full_srq",
+      "type": "boolean",
+      "train": false,
+      "description": "Whether the search result belongs to a search request with all data included"
+    },
+    {
+      "name": "sessions_data_available",
+      "type": "boolean",
+      "train": false,
+      "description": "Whether the search result has features from sessions table"
+    },
+    {
+      "name": "anonymous_user",
+      "type": "boolean",
+      "train": false,
+      "description": "Whether the search request was made by an anonymous user or not"
+    },
+    {
+      "name": "published_price_source_provider_id",
+      "type": "int",
+      "train": false,
+      "description": "Provider giving us published price"
+    },
+    {
+      "name": "published_price_source_type",
+      "type": "varchar(16)",
+      "train": false,
+      "description": "Class of published price"
+    },
+    {
+      "name": "ranking_points",
+      "type": "float",
+      "train": false,
+      "description": "Production model ranking score"
+    },
+    {
+      "name": "display_rank",
+      "type": "int",
+      "train": true,
+      "description": "Default sort rank"
+    },
+    {
+      "name": "price_rank",
+      "type": "int",
+      "train": false,
+      "description": "Price sort rank low to high"
+    },
+    {
+      "name": "rewards_rank",
+      "type": "int",
+      "train": false,
+      "description": "Rewards sort rank low to high"
+    },
+    {
+      "name": "distance_rank",
+      "type": "int",
+      "train": false,
+      "description": "Distance sort rank low to high"
+    },
+    {
+      "name": "label",
+      "type": "int",
+      "train": false,
+      "description": "Relevance rating of search result"
+    },
+    {
+      "name": "srq_date_created",
+      "type": "datetime",
+      "train": false,
+      "description": "Date of search request"
+    },
+    {
+      "name": "check_in",
+      "type": "date",
+      "train": false,
+      "description": "Date of check in"
+    },
+    {
+      "name": "check_out",
+      "type": "date",
+      "train": false,
+      "description": "Date of check out"
+    }, {
+      "name": "est_ttm",
+      "type": "float",
+      "train": false,
+      "description": "Hotel est TTM, for TTM/holdout set purposes"
+    }, {
+      "name": "average_published_tax_and_fees",
+      "type": "float",
+      "train": false,
+      "description": "Hotel nightly tax and fees for TTM/holdout set purposes"
+    }, {
+      "name": "average_net_price",
+      "type": "float",
+      "train": false,
+      "description": "Hotel nightly net price, for TTM/holdout set purposes"
+    }, {
+      "name": "average_net_tax_and_fees",
+      "type": "float",
+      "train": false,
+      "description": "Hotel nightly tax and fees, for TTM/holdout set purposes"
+    }, {
+      "name": "commission_rate",
+      "type": "float",
+      "train": false,
+      "description": "Hotel commission rate, for TTM/holdout set purposes"
+    }, {
+      "name": "est_spread",
+      "type": "float",
+      "train": false,
+      "description": "Hotel raw margin; difference between hotel price and cost"
+    },
+    {
+      "name": "est_spread_pct",
+      "type": "float",
+      "train": false,
+      "description": "Hotel percent margin"
+    },
+    {
+      "name": "average_published_price",
+      "type": "float",
+      "train": true,
+      "description": "Nightly hotel price"
+    },
+    {
+      "name": "total_rewards",
+      "type": "int",
+      "train": false,
+      "description": "Total rewards for booking"
+    },
+    {
+      "name": "advance_purchase_days",
+      "type": "int",
+      "train": true,
+      "description": "Number of days between search request and check-in"
+    },
+    {
+      "name": "number_of_nights",
+      "type": "int",
+      "train": true,
+      "description": "Number of days between check-in and check-out"
+    },
+    {
+      "name": "number_of_rooms",
+      "type": "int",
+      "train": true,
+      "description": "Number of rooms getting booked"
+    },
+    {
+      "name": "number_of_adults",
+      "type": "int",
+      "train": true,
+      "description": "Number of adults getting booked"
+    },
+    {
+      "name": "srq_latitude",
+      "type": "float",
+      "train": true,
+      "description": "Search request region latitude"
+    },
+    {
+      "name": "srq_longitude",
+      "type": "float",
+      "train": true,
+      "description": "Search request region longitude"
+    },
+    {
+      "name": "check_in_weekday",
+      "type": "int",
+      "train": true,
+      "description": "Day of week of check-in"
+    },
+    {
+      "name": "check_out_weekday",
+      "type": "int",
+      "train": true,
+      "description": "Day of week of check-out"
+    },
+    {
+      "name": "srq_weekhour",
+      "type": "float",
+      "train": true,
+      "description": "day of week x 24 + hour of day of time search request was made"
+    },
+      {
+      "name": "travel_intent",
+      "type": "int",
+      "train": true,
+      "description": "1 if business, 0 if not business"
+    },
+    {
+      "name": "weekday_travel",
+      "type": "boolean",
+      "train": true,
+      "description": ""
+    },
+    {
+      "name": "weekend_travel",
+      "type": "boolean",
+      "train": true,
+      "description": ""
+    },
+    {
+      "name": "hotel_latitude",
+      "type": "float",
+      "train": true,
+      "description": "Latitude of the hotel"
+    },
+    {
+      "name": "hotel_longitude",
+      "type": "float",
+      "train": true,
+      "description": "Longitude of the hotel"
+    },
+    {
+      "name": "rating",
+      "type": "float",
+      "train": true,
+      "description": "B.com rating of hotel"
+    },
+    {
+      "name": "stars",
+      "type": "float",
+      "train": true,
+      "description": "Hotel star rating"
+    },
+    {
+      "name": "number_of_reviews",
+      "type": "int",
+      "train": true,
+      "description": "B.com review count"
+    },
+    {
+      "name": "srq_hotel_distance",
+      "type": "float",
+      "train": true,
+      "description": "Distance between search request lat/long and hotel lat/long"
+    },
+    {
+      "name": "normalized_rewards",
+      "type": "float",
+      "train": true,
+      "description": "Total rewards normalized by number of nights and rooms"
+    },
+    {
+      "name": "previous_user_hotel_interaction",
+      "type": "int",
+      "train": true,
+      "description": "1 if user went to payment view of this hotel before, 2 if user made a book attempt"
+    },
+    {
+      "name": "srq_price_zscore",
+      "type": "float",
+      "train": true,
+      "description": "standardized hotel price relative to those in the same search request"
+    },
+    {
+      "name": "srq_rewards_zscore",
+      "type": "float",
+      "train": true,
+      "description": "standardized hotel rewards relative to those in the same search request"
+    },
+    {
+      "name": "srq_distance_zscore",
+      "type": "float",
+      "train": true,
+      "description": "standardized l2 distance of hotel lat/long relative to those in the same search request"
+    },
+    {
+      "name": "srq_rating_zscore",
+      "type": "float",
+      "train": true,
+      "description": "standardized rating of hotel relative to those in the same search request"
+    },
+    {
+      "name": "srq_stars_zscore",
+      "type": "float",
+      "train": true,
+      "description": "standardized stars of hotel relative to those in the same search request"
+    },
+    {
+      "name": "user_preceding_clicks",
+      "type": "int",
+      "train": true,
+      "description": "Cumulative count of user payment page click/booking attempt level views over entire user browsing history"
+    },
+    {
+      "name": "raw_user_preferred_price",
+      "type": "float",
+      "train": false,
+      "description": "Cumulative average of user standardized price scores on payment or book level views"
+    },
+    {
+      "name": "user_preferred_price",
+      "type": "float",
+      "train": true,
+      "description": "User preferred price with Bayesian smoothing towards the mean user preferred price"
+    },
+    {
+      "name": "user_preferred_rewards",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative average of user standardized rewards scores on payment or book level views"
+    },
+        {
+      "name": "user_preferred_stars",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative average of user standardized hotel stars on payment or book level views"
+    },
+        {
+      "name": "user_preferred_rating",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative average of user standardized hotel ratings scores on payment or book level views"
+    },
+    {
+      "name": "user_preferred_distance",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative average of user standardized hotel distance scores on payment or book level views"
+    },
+    {
+      "name": "region_preceding_bookings",
+      "type": "int",
+      "train": true,
+      "description": "Cumulative count of bookings in this region"
+    },
+    {
+      "name": "region_meanprice_diff",
+      "type": "float",
+      "train": true,
+      "description": "Difference between cumulative average price of bookings in this region and current hotel"
+    },
+    {
+      "name": "region_rating_diff",
+      "type": "float",
+      "train": true,
+      "description": "Difference between cumulative average rating of bookings in this region and current hotel"
+    },
+    {
+      "name": "region_stars_diff",
+      "type": "float",
+      "train": true,
+      "description": "Difference between cumulative average stars of bookings in this region and current hotel"
+    },
+    {
+      "name": "region_centroid_distance",
+      "type": "float",
+      "train": true,
+      "description": "Euclidean distance between cumulative average location of bookings in the region to current hotel"
+    },
+    {
+      "name": "region_rewards_diff",
+      "type": "float",
+      "train": true,
+      "description": "Difference between cumulative average rewards of bookings in this region and current hotel"
+    },
+    {
+      "name": "region_price_sd",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative standard deviation of price of bookings in this region"
+    },
+    {
+      "name": "region_rating_sd",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative standard deviation of rating of bookings in this region"
+    },
+    {
+      "name": "region_stars_sd",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative standard deviation of stars of bookings in this region"
+    },
+    {
+      "name": "region_rewards_sd",
+      "type": "float",
+      "train": true,
+      "description": "Cumulative standard deviation of rewards of bookings in this region"
+    },
+    {
+      "name": "hotel_cumulative_bookings",
+      "type": "int",
+      "train": true,
+      "description": "Hotel count of bookings partitioned by region and search type"
+    },
+      {
+      "name": "hotel_cumulative_share",
+      "type": "float",
+      "train": true,
+      "description": "Hotel share of region bookings partitioned by region and search type"
+    },
+        {
+      "name": "popawi",
+      "type": "boolean",
+      "train": true,
+      "description": "Whether the hotel is supplied by Booking.com (PoPaWi affects descriptions etc)"
+    },
+        {
+      "name": "est_spread_rank",
+      "type": "int",
+      "train": false,
+      "description": "est spread sort rank low to high"
+    },
+    {
+      "name": "srq_est_spread_zscore",
+      "type": "float",
+      "train": false,
+      "description": "standardized est_spread relative to those in the same search request"
+    },
+    {
+      "name": "user_preferred_est_spread",
+      "type": "float",
+      "train": false,
+      "description": "Cumulative average of user standardized est_spread scores on payment or book level views"
+    },
+    {
+      "name": "region_est_spread_diff",
+      "type": "float",
+      "train": false,
+      "description": "Difference between cumulative average est spread of bookings in this region and current hotel"
+    },
+    {
+      "name": "region_est_spread_sd",
+      "type": "float",
+      "train": false,
+      "description": "Cumulative standard deviation of est_spread of bookings in this region"
+    },
+    {
+      "name": "emb_0",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_1",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_2",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_3",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_4",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_5",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_6",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_7",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_8",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_9",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_10",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_11",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_12",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_13",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_14",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_15",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_16",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_17",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_18",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_19",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_20",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_21",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_22",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_23",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_24",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_25",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_26",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_27",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_28",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_29",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_30",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    },
+    {
+      "name": "emb_31",
+      "type": "float",
+      "train": true,
+      "description": "Learned hotel embedding"
+    }
+
+
+  ]

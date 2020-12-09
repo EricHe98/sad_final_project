@@ -30,12 +30,13 @@ parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
     help='which dataset to predict on (small_100, small_all, all)')
 parser.add_argument('split', choices=['train', 'val', 'test'],
 	help='which split of the dataset to predict on (train, val, test)')
+parser.add_argument('--data', type=str, default='data/raw',
+    help='path to data dir')
 
 args = parser.parse_args()
-data_path = 'data/raw'
 
 def __main__():
-	data = read_parquet(os.path.join(data_path, args.dataset, args.split))
+	data = read_parquet(os.path.join(args.data, args.dataset, args.split))
 
 	mlflow.start_run(args.run_id)
 
