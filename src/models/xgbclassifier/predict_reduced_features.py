@@ -37,9 +37,6 @@ def __main__():
 	data = read_parquet(os.path.join('data/raw', args.dataset, args.split), columns=model_features + id_features)
 	# set display_rank to a constant to avoid feature leakage
 	data['display_rank'] = 10
-	with open(features_path, 'r') as features:
-	    model_feature_schemas = json.load(features)
-	    model_features = [f['name'] for f in model_feature_schemas if f['train']]
 
 	X, y, qid = feature_label_split(data, model_features, qid='search_request_id')
 	X = X.astype('float')
