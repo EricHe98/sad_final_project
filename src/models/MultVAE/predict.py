@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 import mlflow
+import mlflow.pytorch
 import torch
 from torch.utils.data import Dataset
 from MultVAE_Dataset import BasicHotelDataset
@@ -75,13 +76,13 @@ def densify_sparse_vec(user_interaction_dict, hotel_length):
 
 def predict(run_id,
             multvae_model_path ,
-            dataset_pkl_path ,
+            dataset_pkl,
             hotel_hash ,
             user_hash ,
             output_dir
            ):
     print('IN MAIN')
-    mlflow.start_run(run_id=run_id)
+    # mlflow.start_run(run_id=run_id)
  
     #Check for CUDA
     if torch.cuda.is_available():
@@ -127,7 +128,7 @@ def predict(run_id,
     dlkeys_to_user_id = dataset.idx_to_dataset_keys_dict
     user_id_to_dlkeys = {v: k for k, v in dlkeys_to_user_id.items()}
     # Load our multVAE model
-    model = mlflow.pytorch.load_model(multvae_model)
+    model = mlflow.pytorch.load_model(multvae_model_path)
 
     model.to(device)
     print('loading done')
@@ -143,7 +144,7 @@ def predict(run_id,
         x, observed_vec = densify_sparse_vec(user_interaction_vec,dataset.hotel_length)
         x = x.to(device)
         
-        x_preds, mu, logvar = model(x)
+        x_preds, mu, logvar = model(x.unsqueeze(dim=0))
         
         model.eval()
 
@@ -180,7 +181,7 @@ if __name__ == '__main__':
     
     predict(run_id=run_id,
             multvae_model_path = multvae_model_path,
-            dataset_pkl_path = dataset_pkl_path,
+            dataset_pkl = dataset_pkl_path,
             hotel_hash = hotel_hash,
             user_hash = user_hash,
             output_dir = output_dir

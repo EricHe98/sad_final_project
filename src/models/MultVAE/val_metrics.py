@@ -140,7 +140,7 @@ def val_metrics(model_folder,
     #Make model_path_list
     model_path_list =[]
     for epoch in range(max_epoch):
-        model_name = 'multvae_{0}_epoch_{1}.uri'.format(model_run_id,str(int(epoch)))
+        model_name = 'multvae_{0}_epoch_{1}.uri'.format(model_run_id,str(int(400+epoch)))
         model_path = os.path.join(model_folder,model_name)
         model_path_list.append(model_path)
     #Now loop over each model we need to eval on
