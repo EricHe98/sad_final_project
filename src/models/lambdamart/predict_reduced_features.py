@@ -16,7 +16,7 @@ from src.modules.modules_pandas import read_parquet, feature_label_split
 import mlflow
 
 import argparse
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Use LambdaMART example model to predict on validation set.')
 parser.add_argument('run_id', type=str, 
     help='Run ID for saving models')
 parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
@@ -27,26 +27,25 @@ parser.add_argument('split', choices=['train', 'val', 'test'],
 args = parser.parse_args()
 
 features_path = 'src/data/schemas/output_data_schemas.json'
-with open(features_path, 'r') as features:
-    model_feature_schemas = json.load(features)
-    model_features = [f['name'] for f in model_feature_schemas if f['train']]
+
+model_features = ['hotel_cumulative_share', 'srq_price_zscore', 'previous_user_hotel_interaction',
+	'srq_rewards_zscore', 'travel_intent', 'srq_distance_zscore', 'user_preferred_price']
+
+id_features = ['search_request_id', 'hotel_id','user_id', 'label']
 
 def __main__():
 	mlflow.start_run(run_id=args.run_id)
 
-	data = read_parquet(os.path.join('data/raw', args.dataset, args.split))
-	# set display_rank to a constant to avoid feature leakage
-	data['display_rank'] = 10
+	data = read_parquet(os.path.join('data/raw', args.dataset, args.split), columns=model_features + id_features)
 
 	X, y, qid = feature_label_split(data, model_features, qid='search_request_id')
-	X = X.astype('float').fillna(0)
-	y = np.where(y >= 1, 1, y)
+	X = X.astype('float')
 
-	model= mlflow.sklearn.load_model('runs:/{}/model.json'.format(args.run_id))
+	model= mlflow.xgboost.load_model('runs:/{}/model.json'.format(args.run_id))
 
 	pred_array = data[['search_request_id', 'hotel_id']].copy()
 
-	pred_array['score'] = model.predict_log_proba(X)[:,1]
+	pred_array['score'] = model.predict(xgb.DMatrix(X))
 	pred_array['rank'] = pred_array\
 	    .groupby('search_request_id')\
 	    ['score']\
@@ -72,7 +71,8 @@ def __main__():
 		for t in range(N_TRIALS):
 			sample = X.sample(r)
 			time_start = dt.datetime.now()
-			model.predict_log_proba(sample)[:,1]
+			sample_dmat = xgb.DMatrix(sample)
+			model.predict(sample_dmat)
 			time_end = dt.datetime.now()
 			times.append((time_end - time_start).total_seconds() * 1000)
 		pctile_95 = np.percentile(times, 95)

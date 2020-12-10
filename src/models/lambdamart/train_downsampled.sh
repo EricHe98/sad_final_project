@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=4
-#SBATCH --time=1:00:00
-#SBATCH --mem=256GB
+#SBATCH --cpus-per-task=8
+#SBATCH --time=8:00:00
+#SBATCH --mem=64GB
 #SBATCH --job-name=dsga3001-lab0
 #SBATCH --mail-type=END
 #SBATCH --mail-user=eric.he@stern.nyu.edu
@@ -23,8 +23,7 @@ pipenv shell
 export PYTHONPATH="./"
 
 # Execute the script
-
-python src/models/xgbclassifier/predict.py 315fe1cd0ee84257ab01cc7d4b3d2ec1 full test
+python src/models/lambdamart/train.py downsampled
 
 # And we're done!
 
