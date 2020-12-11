@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=predict_lambdamart_user
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=20
-#SBATCH --mem=256gb
-#SBATCH --time=48:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8gb
+#SBATCH --time=8:00:00
 #SBATCH --mail-type=END
 #SBATCH --mail-user=abh466@nyu.edu
 #SBATCH --output=slurm_%j.out
