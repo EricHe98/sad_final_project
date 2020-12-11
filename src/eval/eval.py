@@ -10,7 +10,7 @@ import json
 import sys
 import datetime as dt
 
-import numpy as np 
+import numpy as np
 import pandas as pd
 
 import mlflow
@@ -24,7 +24,7 @@ import src.modules.letor_metrics as lm
 
 import argparse
 parser = argparse.ArgumentParser(description='Evaluate a given set of predictions on a bunch of metrics.')
-parser.add_argument('run_id', type=str, 
+parser.add_argument('run_id', type=str,
     help='Run ID for saving models')
 parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
     help='which dataset to predict on (small_100, small_all, all)')
@@ -37,7 +37,7 @@ args = parser.parse_args()
 
 def __main__():
 	data = read_parquet(os.path.join(args.data, args.dataset, args.split),
-		columns=['hotel_id', 'user_id', 
+		columns=['hotel_id', 'user_id',
 			'search_request_id', 'hotel_cumulative_share',
 			'display_rank', 'price_rank', 'label'])
 
@@ -61,8 +61,8 @@ def __main__():
 	# fill in null prediction with hotel cumulative share
 	# ensure that those with non-null predictions are always above those null-filled
 	# using this ghetto formula
-	joined['score'] = np.where(joined['score'].isnull(), 
-		joined['score'].min() - (1 / (joined['hotel_cumulative_share'] + 1)), 
+	joined['score'] = np.where(joined['score'].isnull(),
+		joined['score'].min() - (1 / (joined['hotel_cumulative_share'] + 1)),
 		joined['score'])
 
 	ndcg_default = lm.ndcg(
@@ -79,10 +79,11 @@ def __main__():
 	mlflow.log_metric('ndcg_popularity', ndcg_popularity.mean())
 
 	ndcg_model = lm.ndcg(
-	    joined, 
+	    joined,
 	    groupby='search_request_id',
 	    ranker='score')
 	mlflow.log_metric('ndcg', ndcg_model.mean())
+	print(f"ndcg: {ndcg_model.mean()}")
 
 	tau_default = lm.tau(
 	    joined,
