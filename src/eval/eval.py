@@ -24,15 +24,15 @@ import src.modules.letor_metrics as lm
 
 import argparse
 parser = argparse.ArgumentParser(description='Use LambdaMART example model to predict on validation set.')
-parser.add_argument('run_id', type=str, 
+parser.add_argument('-r','--run_id', type=str, 
     help='Run ID for saving models')
-parser.add_argument('dataset', choices=['small_100', 'small_all', 'full'],
+parser.add_argument('-d','--dataset', choices=['small_100', 'small_all', 'full'],
     help='which dataset to predict on (small_100, small_all, all)')
-parser.add_argument('split', choices=['train', 'val', 'test'],
+parser.add_argument('-s','split', choices=['train', 'val', 'test'],
 	help='which split of the dataset to predict on (train, val, test)')
 
 args = parser.parse_args()
-data_path = 'data/raw'
+data_path = '/scratch/work/js11133/sad_data/data/raw'
 
 def __main__():
 	data = read_parquet(os.path.join(data_path, args.dataset, args.split))
