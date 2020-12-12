@@ -49,6 +49,7 @@ def __main__():
     emb_df = pd.read_parquet(args.emb)
     emb_df, emb_col_names = transform_embeddings(emb_df)
     data = join_emb_data(emb_df, data, emb_col_names)
+    print(data.head())
 
     with open(features_path, 'r') as features:
         model_feature_schemas = json.load(features)

@@ -17,5 +17,5 @@ RUN_ID=32d6e30644b54bdeadc6b1e843a0fabe
 export PYTHONPATH="./"
 pip install mlflow==1.11.0
 
-python -u src/models/embeddings/predict.py $RUN_ID full test --emb /scratch/abh466/sad_data/embeddings/full/embeddings.parquet --data /scratch/abh466/sad_data/raw
+python -u src/models/embeddings/predict.py $RUN_ID full test --emb $2/embeddings.parquet --data /scratch/abh466/sad_data/raw
 
