@@ -1,0 +1,1007 @@
+MLFlow Run ID is :50fbe8aa06e24238890d1ab10fdf2c1d
+There are 1 GPU(s) available.
+We will use the GPU: Tesla V100-PCIE-32GB
+Epoch 1
+Train Loss: 35.419309
+Validation Loss: 21.195228
+Saved best model in the checkpoint directory
+
+Epoch 2
+Train Loss: 34.386286
+Validation Loss: 21.111783
+Saved best model in the checkpoint directory
+
+Epoch 3
+Train Loss: 34.202082
+Validation Loss: 21.109253
+Saved best model in the checkpoint directory
+
+Epoch 4
+Train Loss: 35.194855
+Validation Loss: 21.104982
+Saved best model in the checkpoint directory
+
+Epoch 5
+Train Loss: 34.278910
+Validation Loss: 21.112697
+Saved best model in the checkpoint directory
+
+Epoch 6
+Train Loss: 34.269721
+Validation Loss: 21.099363
+Saved best model in the checkpoint directory
+
+Epoch 7
+Train Loss: 34.247944
+Validation Loss: 21.149748
+Saved best model in the checkpoint directory
+
+Epoch 8
+Train Loss: 34.147321
+Validation Loss: 21.196338
+Saved best model in the checkpoint directory
+
+Epoch 9
+Train Loss: 34.059793
+Validation Loss: 21.049246
+Saved best model in the checkpoint directory
+
+Epoch 10
+Train Loss: 33.911690
+Validation Loss: 21.047665
+Saved best model in the checkpoint directory
+
+Epoch 11
+Train Loss: 33.816401
+Validation Loss: 21.006543
+Saved best model in the checkpoint directory
+
+Epoch 12
+Train Loss: 33.746201
+Validation Loss: 21.003699
+Saved best model in the checkpoint directory
+
+Epoch 13
+Train Loss: 33.634659
+Validation Loss: 20.978050
+Saved best model in the checkpoint directory
+
+Epoch 14
+Train Loss: 33.553016
+Validation Loss: 20.969305
+Saved best model in the checkpoint directory
+
+Epoch 15
+Train Loss: 33.517253
+Validation Loss: 20.956114
+Saved best model in the checkpoint directory
+
+Epoch 16
+Train Loss: 33.524760
+Validation Loss: 20.984758
+Saved best model in the checkpoint directory
+
+Epoch 17
+Train Loss: 33.428202
+Validation Loss: 20.937445
+Saved best model in the checkpoint directory
+
+Epoch 18
+Train Loss: 33.395774
+Validation Loss: 20.933333
+Saved best model in the checkpoint directory
+
+Epoch 19
+Train Loss: 33.337117
+Validation Loss: 20.921584
+Saved best model in the checkpoint directory
+
+Epoch 20
+Train Loss: 33.302170
+Validation Loss: 20.910042
+Saved best model in the checkpoint directory
+
+Epoch 21
+Train Loss: 33.287720
+Validation Loss: 20.902959
+Saved best model in the checkpoint directory
+
+Epoch 22
+Train Loss: 33.250369
+Validation Loss: 20.908903
+Saved best model in the checkpoint directory
+
+Epoch 23
+Train Loss: 33.217762
+Validation Loss: 20.860712
+Saved best model in the checkpoint directory
+
+Epoch 24
+Train Loss: 33.207494
+Validation Loss: 20.854168
+Saved best model in the checkpoint directory
+
+Epoch 25
+Train Loss: 33.181590
+Validation Loss: 20.842599
+Saved best model in the checkpoint directory
+
+Epoch 26
+Train Loss: 33.142801
+Validation Loss: 20.838866
+Saved best model in the checkpoint directory
+
+Epoch 27
+Train Loss: 33.155321
+Validation Loss: 20.819801
+Saved best model in the checkpoint directory
+
+Epoch 28
+Train Loss: 33.134201
+Validation Loss: 20.814210
+Saved best model in the checkpoint directory
+
+Epoch 29
+Train Loss: 33.107387
+Validation Loss: 20.808912
+Saved best model in the checkpoint directory
+
+Epoch 30
+Train Loss: 33.187459
+Validation Loss: 20.817923
+Saved best model in the checkpoint directory
+
+Epoch 31
+Train Loss: 33.082031
+Validation Loss: 20.793246
+Saved best model in the checkpoint directory
+
+Epoch 32
+Train Loss: 33.053613
+Validation Loss: 20.847028
+Saved best model in the checkpoint directory
+
+Epoch 33
+Train Loss: 33.026542
+Validation Loss: 20.808923
+Saved best model in the checkpoint directory
+
+Epoch 34
+Train Loss: 33.007915
+Validation Loss: 20.788387
+Saved best model in the checkpoint directory
+
+Epoch 35
+Train Loss: 32.995581
+Validation Loss: 20.791731
+Saved best model in the checkpoint directory
+
+Epoch 36
+Train Loss: 32.984834
+Validation Loss: 20.803997
+Saved best model in the checkpoint directory
+
+Epoch 37
+Train Loss: 32.961941
+Validation Loss: 20.743358
+Saved best model in the checkpoint directory
+
+Epoch 38
+Train Loss: 32.944454
+Validation Loss: 20.743677
+Saved best model in the checkpoint directory
+
+Epoch 39
+Train Loss: 32.933628
+Validation Loss: 20.733964
+Saved best model in the checkpoint directory
+
+Epoch 40
+Train Loss: 32.912918
+Validation Loss: 20.766010
+Saved best model in the checkpoint directory
+
+Epoch 41
+Train Loss: 32.906790
+Validation Loss: 20.726769
+Saved best model in the checkpoint directory
+
+Epoch 42
+Train Loss: 32.890706
+Validation Loss: 20.706519
+Saved best model in the checkpoint directory
+
+Epoch 43
+Train Loss: 32.878588
+Validation Loss: 20.772832
+Saved best model in the checkpoint directory
+
+Epoch 44
+Train Loss: 32.877807
+Validation Loss: 20.707570
+Saved best model in the checkpoint directory
+
+Epoch 45
+Train Loss: 32.881934
+Validation Loss: 20.716592
+Saved best model in the checkpoint directory
+
+Epoch 46
+Train Loss: 32.856640
+Validation Loss: 20.698126
+Saved best model in the checkpoint directory
+
+Epoch 47
+Train Loss: 32.851618
+Validation Loss: 20.725342
+Saved best model in the checkpoint directory
+
+Epoch 48
+Train Loss: 32.838153
+Validation Loss: 20.736110
+Saved best model in the checkpoint directory
+
+Epoch 49
+Train Loss: 32.838009
+Validation Loss: 20.725915
+Saved best model in the checkpoint directory
+
+Epoch 50
+Train Loss: 32.824252
+Validation Loss: 20.740479
+Saved best model in the checkpoint directory
+
+Epoch 51
+Train Loss: 32.811345
+Validation Loss: 20.732922
+Saved best model in the checkpoint directory
+
+Epoch 52
+Train Loss: 32.823163
+Validation Loss: 20.734094
+Saved best model in the checkpoint directory
+
+Epoch 53
+Train Loss: 32.854065
+Validation Loss: 20.697629
+Saved best model in the checkpoint directory
+
+Epoch 54
+Train Loss: 32.810899
+Validation Loss: 20.733556
+Saved best model in the checkpoint directory
+
+Epoch 55
+Train Loss: 32.786023
+Validation Loss: 20.703284
+Saved best model in the checkpoint directory
+
+Epoch 56
+Train Loss: 32.770555
+Validation Loss: 20.708884
+Saved best model in the checkpoint directory
+
+Epoch 57
+Train Loss: 32.760379
+Validation Loss: 20.690151
+Saved best model in the checkpoint directory
+
+Epoch 58
+Train Loss: 32.749193
+Validation Loss: 20.662139
+Saved best model in the checkpoint directory
+
+Epoch 59
+Train Loss: 32.741711
+Validation Loss: 20.650764
+Saved best model in the checkpoint directory
+
+Epoch 60
+Train Loss: 32.728381
+Validation Loss: 20.662838
+Saved best model in the checkpoint directory
+
+Epoch 61
+Train Loss: 32.726360
+Validation Loss: 20.695545
+Saved best model in the checkpoint directory
+
+Epoch 62
+Train Loss: 32.716529
+Validation Loss: 20.658048
+Saved best model in the checkpoint directory
+
+Epoch 63
+Train Loss: 32.712810
+Validation Loss: 20.658866
+Saved best model in the checkpoint directory
+
+Epoch 64
+Train Loss: 32.704706
+Validation Loss: 20.672245
+Saved best model in the checkpoint directory
+
+Epoch 65
+Train Loss: 32.692278
+Validation Loss: 20.657813
+Saved best model in the checkpoint directory
+
+Epoch 66
+Train Loss: 32.683309
+Validation Loss: 20.637897
+Saved best model in the checkpoint directory
+
+Epoch 67
+Train Loss: 32.672318
+Validation Loss: 20.657384
+Saved best model in the checkpoint directory
+
+Epoch 68
+Train Loss: 32.666156
+Validation Loss: 20.641751
+Saved best model in the checkpoint directory
+
+Epoch 69
+Train Loss: 32.647920
+Validation Loss: 20.609013
+Saved best model in the checkpoint directory
+
+Epoch 70
+Train Loss: 32.636760
+Validation Loss: 20.592045
+Saved best model in the checkpoint directory
+
+Epoch 71
+Train Loss: 32.626064
+Validation Loss: 20.614024
+Saved best model in the checkpoint directory
+
+Epoch 72
+Train Loss: 32.625865
+Validation Loss: 20.602129
+Saved best model in the checkpoint directory
+
+Epoch 73
+Train Loss: 32.609656
+Validation Loss: 20.628838
+Saved best model in the checkpoint directory
+
+Epoch 74
+Train Loss: 32.613696
+Validation Loss: 20.611385
+Saved best model in the checkpoint directory
+
+Epoch 75
+Train Loss: 32.590769
+Validation Loss: 20.583463
+Saved best model in the checkpoint directory
+
+Epoch 76
+Train Loss: 32.583357
+Validation Loss: 20.570682
+Saved best model in the checkpoint directory
+
+Epoch 77
+Train Loss: 32.563229
+Validation Loss: 20.565699
+Saved best model in the checkpoint directory
+
+Epoch 78
+Train Loss: 32.556301
+Validation Loss: 20.571719
+Saved best model in the checkpoint directory
+
+Epoch 79
+Train Loss: 32.553971
+Validation Loss: 20.552970
+Saved best model in the checkpoint directory
+
+Epoch 80
+Train Loss: 32.551522
+Validation Loss: 20.569887
+Saved best model in the checkpoint directory
+
+Epoch 81
+Train Loss: 32.532651
+Validation Loss: 20.570547
+Saved best model in the checkpoint directory
+
+Epoch 82
+Train Loss: 32.527676
+Validation Loss: 20.550941
+Saved best model in the checkpoint directory
+
+Epoch 83
+Train Loss: 32.521862
+Validation Loss: 20.535438
+Saved best model in the checkpoint directory
+
+Epoch 84
+Train Loss: 32.513451
+Validation Loss: 20.528533
+Saved best model in the checkpoint directory
+
+Epoch 85
+Train Loss: 32.505502
+Validation Loss: 20.550812
+Saved best model in the checkpoint directory
+
+Epoch 86
+Train Loss: 32.489298
+Validation Loss: 20.524099
+Saved best model in the checkpoint directory
+
+Epoch 87
+Train Loss: 32.480055
+Validation Loss: 20.548809
+Saved best model in the checkpoint directory
+
+Epoch 88
+Train Loss: 32.472847
+Validation Loss: 20.528592
+Saved best model in the checkpoint directory
+
+Epoch 89
+Train Loss: 32.465650
+Validation Loss: 20.535343
+Saved best model in the checkpoint directory
+
+Epoch 90
+Train Loss: 32.464789
+Validation Loss: 20.501687
+Saved best model in the checkpoint directory
+
+Epoch 91
+Train Loss: 32.443907
+Validation Loss: 20.520146
+Saved best model in the checkpoint directory
+
+Epoch 92
+Train Loss: 32.452475
+Validation Loss: 20.509994
+Saved best model in the checkpoint directory
+
+Epoch 93
+Train Loss: 32.431552
+Validation Loss: 20.498970
+Saved best model in the checkpoint directory
+
+Epoch 94
+Train Loss: 32.424385
+Validation Loss: 20.517189
+Saved best model in the checkpoint directory
+
+Epoch 95
+Train Loss: 32.419121
+Validation Loss: 20.492977
+Saved best model in the checkpoint directory
+
+Epoch 96
+Train Loss: 32.409814
+Validation Loss: 20.524953
+Saved best model in the checkpoint directory
+
+Epoch 97
+Train Loss: 32.406109
+Validation Loss: 20.526176
+Saved best model in the checkpoint directory
+
+Epoch 98
+Train Loss: 32.399472
+Validation Loss: 20.489363
+Saved best model in the checkpoint directory
+
+Epoch 99
+Train Loss: 32.386722
+Validation Loss: 20.541564
+Saved best model in the checkpoint directory
+
+Epoch 100
+Train Loss: 32.387265
+Validation Loss: 20.512599
+Saved best model in the checkpoint directory
+
+Epoch 101
+Train Loss: 32.365085
+Validation Loss: 20.496820
+Saved best model in the checkpoint directory
+
+Epoch 102
+Train Loss: 32.366987
+Validation Loss: 20.495994
+Saved best model in the checkpoint directory
+
+Epoch 103
+Train Loss: 32.358114
+Validation Loss: 20.510466
+Saved best model in the checkpoint directory
+
+Epoch 104
+Train Loss: 32.343824
+Validation Loss: 20.480007
+Saved best model in the checkpoint directory
+
+Epoch 105
+Train Loss: 32.334469
+Validation Loss: 20.506306
+Saved best model in the checkpoint directory
+
+Epoch 106
+Train Loss: 32.335715
+Validation Loss: 20.500681
+Saved best model in the checkpoint directory
+
+Epoch 107
+Train Loss: 32.314358
+Validation Loss: 20.504888
+Saved best model in the checkpoint directory
+
+Epoch 108
+Train Loss: 32.318090
+Validation Loss: 20.464081
+Saved best model in the checkpoint directory
+
+Epoch 109
+Train Loss: 32.301850
+Validation Loss: 20.458487
+Saved best model in the checkpoint directory
+
+Epoch 110
+Train Loss: 32.306728
+Validation Loss: 20.450630
+Saved best model in the checkpoint directory
+
+Epoch 111
+Train Loss: 32.296746
+Validation Loss: 20.461275
+Saved best model in the checkpoint directory
+
+Epoch 112
+Train Loss: 32.278652
+Validation Loss: 20.467944
+Saved best model in the checkpoint directory
+
+Epoch 113
+Train Loss: 32.280925
+Validation Loss: 20.460717
+Saved best model in the checkpoint directory
+
+Epoch 114
+Train Loss: 32.270455
+Validation Loss: 20.448175
+Saved best model in the checkpoint directory
+
+Epoch 115
+Train Loss: 32.284577
+Validation Loss: 20.470061
+Saved best model in the checkpoint directory
+
+Epoch 116
+Train Loss: 32.267624
+Validation Loss: 20.461643
+Saved best model in the checkpoint directory
+
+Epoch 117
+Train Loss: 32.254819
+Validation Loss: 20.446196
+Saved best model in the checkpoint directory
+
+Epoch 118
+Train Loss: 32.231276
+Validation Loss: 20.483416
+Saved best model in the checkpoint directory
+
+Epoch 119
+Train Loss: 32.234138
+Validation Loss: 20.482992
+Saved best model in the checkpoint directory
+
+Epoch 120
+Train Loss: 32.231977
+Validation Loss: 20.448585
+Saved best model in the checkpoint directory
+
+Epoch 121
+Train Loss: 32.225795
+Validation Loss: 20.464005
+Saved best model in the checkpoint directory
+
+Epoch 122
+Train Loss: 32.228810
+Validation Loss: 20.478974
+Saved best model in the checkpoint directory
+
+Epoch 123
+Train Loss: 32.216238
+Validation Loss: 20.417904
+Saved best model in the checkpoint directory
+
+Epoch 124
+Train Loss: 32.214951
+Validation Loss: 20.438083
+Saved best model in the checkpoint directory
+
+Epoch 125
+Train Loss: 32.204978
+Validation Loss: 20.437555
+Saved best model in the checkpoint directory
+
+Epoch 126
+Train Loss: 32.209347
+Validation Loss: 20.450954
+Saved best model in the checkpoint directory
+
+Epoch 127
+Train Loss: 32.202270
+Validation Loss: 20.434769
+Saved best model in the checkpoint directory
+
+Epoch 128
+Train Loss: 32.190724
+Validation Loss: 20.453930
+Saved best model in the checkpoint directory
+
+Epoch 129
+Train Loss: 32.182087
+Validation Loss: 20.450735
+Saved best model in the checkpoint directory
+
+Epoch 130
+Train Loss: 32.175798
+Validation Loss: 20.427084
+Saved best model in the checkpoint directory
+
+Epoch 131
+Train Loss: 32.172578
+Validation Loss: 20.459403
+Saved best model in the checkpoint directory
+
+Epoch 132
+Train Loss: 32.168844
+Validation Loss: 20.446469
+Saved best model in the checkpoint directory
+
+Epoch 133
+Train Loss: 32.157000
+Validation Loss: 20.464249
+Saved best model in the checkpoint directory
+
+Epoch 134
+Train Loss: 32.145251
+Validation Loss: 20.443353
+Saved best model in the checkpoint directory
+
+Epoch 135
+Train Loss: 32.148841
+Validation Loss: 20.453834
+Saved best model in the checkpoint directory
+
+Epoch 136
+Train Loss: 32.152640
+Validation Loss: 20.427000
+Saved best model in the checkpoint directory
+
+Epoch 137
+Train Loss: 32.130311
+Validation Loss: 20.416772
+Saved best model in the checkpoint directory
+
+Epoch 138
+Train Loss: 32.124850
+Validation Loss: 20.424576
+Saved best model in the checkpoint directory
+
+Epoch 139
+Train Loss: 32.116207
+Validation Loss: 20.413124
+Saved best model in the checkpoint directory
+
+Epoch 140
+Train Loss: 32.121094
+Validation Loss: 20.404293
+Saved best model in the checkpoint directory
+
+Epoch 141
+Train Loss: 32.110195
+Validation Loss: 20.402602
+Saved best model in the checkpoint directory
+
+Epoch 142
+Train Loss: 32.106980
+Validation Loss: 20.394164
+Saved best model in the checkpoint directory
+
+Epoch 143
+Train Loss: 32.107210
+Validation Loss: 20.392538
+Saved best model in the checkpoint directory
+
+Epoch 144
+Train Loss: 32.098568
+Validation Loss: 20.386471
+Saved best model in the checkpoint directory
+
+Epoch 145
+Train Loss: 32.093092
+Validation Loss: 20.403580
+Saved best model in the checkpoint directory
+
+Epoch 146
+Train Loss: 32.083881
+Validation Loss: 20.436897
+Saved best model in the checkpoint directory
+
+Epoch 147
+Train Loss: 32.073080
+Validation Loss: 20.399612
+Saved best model in the checkpoint directory
+
+Epoch 148
+Train Loss: 32.072022
+Validation Loss: 20.396245
+Saved best model in the checkpoint directory
+
+Epoch 149
+Train Loss: 32.066618
+Validation Loss: 20.390197
+Saved best model in the checkpoint directory
+
+Epoch 150
+Train Loss: 32.068578
+Validation Loss: 20.410868
+Saved best model in the checkpoint directory
+
+Epoch 151
+Train Loss: 32.051358
+Validation Loss: 20.413659
+Saved best model in the checkpoint directory
+
+Epoch 152
+Train Loss: 32.047699
+Validation Loss: 20.425129
+Saved best model in the checkpoint directory
+
+Epoch 153
+Train Loss: 32.045207
+Validation Loss: 20.411329
+Saved best model in the checkpoint directory
+
+Epoch 154
+Train Loss: 32.041308
+Validation Loss: 20.417792
+Saved best model in the checkpoint directory
+
+Epoch 155
+Train Loss: 32.034287
+Validation Loss: 20.401663
+Saved best model in the checkpoint directory
+
+Epoch 156
+Train Loss: 32.033628
+Validation Loss: 20.397539
+Saved best model in the checkpoint directory
+
+Epoch 157
+Train Loss: 32.030140
+Validation Loss: 20.382847
+Saved best model in the checkpoint directory
+
+Epoch 158
+Train Loss: 32.019871
+Validation Loss: 20.375420
+Saved best model in the checkpoint directory
+
+Epoch 159
+Train Loss: 32.004177
+Validation Loss: 20.394820
+Saved best model in the checkpoint directory
+
+Epoch 160
+Train Loss: 32.007782
+Validation Loss: 20.392032
+Saved best model in the checkpoint directory
+
+Epoch 161
+Train Loss: 32.002367
+Validation Loss: 20.400841
+Saved best model in the checkpoint directory
+
+Epoch 162
+Train Loss: 31.992025
+Validation Loss: 20.395042
+Saved best model in the checkpoint directory
+
+Epoch 163
+Train Loss: 31.982441
+Validation Loss: 20.391271
+Saved best model in the checkpoint directory
+
+Epoch 164
+Train Loss: 31.991477
+Validation Loss: 20.390473
+Saved best model in the checkpoint directory
+
+Epoch 165
+Train Loss: 31.972992
+Validation Loss: 20.372670
+Saved best model in the checkpoint directory
+
+Epoch 166
+Train Loss: 31.971460
+Validation Loss: 20.372211
+Saved best model in the checkpoint directory
+
+Epoch 167
+Train Loss: 31.957219
+Validation Loss: 20.412630
+Saved best model in the checkpoint directory
+
+Epoch 168
+Train Loss: 31.950925
+Validation Loss: 20.375145
+Saved best model in the checkpoint directory
+
+Epoch 169
+Train Loss: 31.948273
+Validation Loss: 20.371815
+Saved best model in the checkpoint directory
+
+Epoch 170
+Train Loss: 31.931142
+Validation Loss: 20.382655
+Saved best model in the checkpoint directory
+
+Epoch 171
+Train Loss: 31.928852
+Validation Loss: 20.369989
+Saved best model in the checkpoint directory
+
+Epoch 172
+Train Loss: 31.924597
+Validation Loss: 20.362966
+Saved best model in the checkpoint directory
+
+Epoch 173
+Train Loss: 31.907674
+Validation Loss: 20.380899
+Saved best model in the checkpoint directory
+
+Epoch 174
+Train Loss: 31.907564
+Validation Loss: 20.383945
+Saved best model in the checkpoint directory
+
+Epoch 175
+Train Loss: 31.903533
+Validation Loss: 20.367329
+Saved best model in the checkpoint directory
+
+Epoch 176
+Train Loss: 31.888093
+Validation Loss: 20.383042
+Saved best model in the checkpoint directory
+
+Epoch 177
+Train Loss: 31.897217
+Validation Loss: 20.371397
+Saved best model in the checkpoint directory
+
+Epoch 178
+Train Loss: 31.886005
+Validation Loss: 20.341390
+Saved best model in the checkpoint directory
+
+Epoch 179
+Train Loss: 31.876411
+Validation Loss: 20.367394
+Saved best model in the checkpoint directory
+
+Epoch 180
+Train Loss: 31.868681
+Validation Loss: 20.350626
+Saved best model in the checkpoint directory
+
+Epoch 181
+Train Loss: 31.851969
+Validation Loss: 20.366542
+Saved best model in the checkpoint directory
+
+Epoch 182
+Train Loss: 31.860629
+Validation Loss: 20.360613
+Saved best model in the checkpoint directory
+
+Epoch 183
+Train Loss: 31.849488
+Validation Loss: 20.379073
+Saved best model in the checkpoint directory
+
+Epoch 184
+Train Loss: 31.848768
+Validation Loss: 20.344458
+Saved best model in the checkpoint directory
+
+Epoch 185
+Train Loss: 31.846275
+Validation Loss: 20.364272
+Saved best model in the checkpoint directory
+
+Epoch 186
+Train Loss: 31.832297
+Validation Loss: 20.369053
+Saved best model in the checkpoint directory
+
+Epoch 187
+Train Loss: 31.831897
+Validation Loss: 20.374064
+Saved best model in the checkpoint directory
+
+Epoch 188
+Train Loss: 31.822112
+Validation Loss: 20.361157
+Saved best model in the checkpoint directory
+
+Epoch 189
+Train Loss: 31.810524
+Validation Loss: 20.379161
+Saved best model in the checkpoint directory
+
+Epoch 190
+Train Loss: 31.814434
+Validation Loss: 20.357202
+Saved best model in the checkpoint directory
+
+Epoch 191
+Train Loss: 31.802415
+Validation Loss: 20.366851
+Saved best model in the checkpoint directory
+
+Epoch 192
+Train Loss: 31.807389
+Validation Loss: 20.376621
+Saved best model in the checkpoint directory
+
+Epoch 193
+Train Loss: 31.796946
+Validation Loss: 20.373887
+Saved best model in the checkpoint directory
+
+Epoch 194
+Train Loss: 31.778014
+Validation Loss: 20.356017
+Saved best model in the checkpoint directory
+
+Epoch 195
+Train Loss: 31.772755
+Validation Loss: 20.353964
+Saved best model in the checkpoint directory
+
+Epoch 196
+Train Loss: 31.774444
+Validation Loss: 20.359340
+Saved best model in the checkpoint directory
+
+Epoch 197
+Train Loss: 31.765433
+Validation Loss: 20.353303
+Saved best model in the checkpoint directory
+
+Epoch 198
+Train Loss: 31.763744
+Validation Loss: 20.368326
+Saved best model in the checkpoint directory
+
+Epoch 199
+Train Loss: 31.755063
+Validation Loss: 20.355538
+Saved best model in the checkpoint directory
+
+Epoch 200
+Train Loss: 31.749593
+Validation Loss: 20.335723
+Saved best model in the checkpoint directory
+
+Traceback (most recent call last):
+  File "/home/abh466/sad_final_project/src/models/MultVAE/train.py", line 128, in <module>
+    with open('checkpoints/metrics_{}.pkl'.format(run_id), "wb" ) as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/metrics_50fbe8aa06e24238890d1ab10fdf2c1d.pkl'
