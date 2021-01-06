@@ -19,6 +19,12 @@ POS_PAIRS_FILENAME = "pos_pairs.csv"
 NEG_PAIRS_FILENAME = "neg_pairs.csv"
 HOTELS_FILENAME = "hotels.csv"
 
+parser = argparse.ArgumentParser(description='Generate hotel embeddings')
+parser.add_argument('--data', type=str, required=True,
+        help='path to data dir')
+
+args = parser.parse_args()
+
 def read_pairs(path):
     pairs = []
     with open(path, 'r') as file:
@@ -122,22 +128,24 @@ class HotelEmbeddingsDataset(Dataset):
     def __getitem__(self, idx):
         return torch.LongTensor(self.training_data[idx])
 
-def __main__():
-    parser = argparse.ArgumentParser(description='Generate hotel embeddings')
-    parser.add_argument('--data', type=str, required=True,
-        help='path to data dir')
-
-    args = parser.parse_args()
-
+if __name__ == '__main__':
     BATCH_SIZE = 1024
     EMBEDDING_DIM = 32
+
+    print('here')
+
+    hotel_dataset = HotelEmbeddingsDataset(pos_pairs=os.path.join(args.data, 'pos_pairs.csv'), neg_pairs=os.path.join(
+        args.data, 'neg_pairs.csv'), hotels=os.path.join(args.data, 'hotels.csv'))
     N_HOTELS = len(hotels)
 
-    hotel_dataset = HotelEmbeddingsDataset()
     dataset_loader = torch.utils.data.DataLoader(hotel_dataset,
                                                  batch_size=BATCH_SIZE, shuffle=True)
     hotels = read_hotels(os.path.join(args.data, 'hotels.csv'))
-
+    dataset_loader = torch.utils.data.DataLoader(hotel_dataset,
+                                                 batch_size=BATCH_SIZE, shuffle=True)
+    hotels = read_hotels(os.path.join(args.data, 'hotels.csv'))
+    N_HOTELS = len(hotels)
+    
     # initialize embeddings randomly
     model = EmbeddingModeler(N_HOTELS, EMBEDDING_DIM, with_bias=True)
 
@@ -173,7 +181,42 @@ def __main__():
         if e % 1 == 0:
             print(f"epoch: {e}: {avg_loss}")
         if best_loss > avg_loss:
-            torch.save(model, read_hotels(os.path.join(args.data, 'sad_embedding_model.p')))
+    # initialize embeddings randomly
+    model = EmbeddingModeler(N_HOTELS, EMBEDDING_DIM, with_bias=True)
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = 'cpu'
+    model.to(device)
+    print(device)
+
+    optimizer = torch.optim.Adagrad(model.parameters(), lr=1)
+    loss_func = nn.BCELoss()
+
+    best_loss = 9999
+
+    # loop over epochs
+    epoch_losses = []
+    patience = 0
+    for e in range(20):
+        losses = 0
+        for (idx, batch) in enumerate(dataset_loader):
+            batch = batch.to(device)
+            pred = model(batch)
+
+            target = batch[:, 2]
+            loss = loss_func(pred.float(), target.float())
+
+            loss.backward()
+            losses += loss.item()
+
+            optimizer.step() # perform the backprop step
+            optimizer.zero_grad() # reset loss to 0
+
+        avg_loss = loss / len(dataset_loader.dataset)
+        if e % 1 == 0:
+            print(f"epoch: {e}: {avg_loss}")
+        if best_loss > avg_loss:
+            torch.save(model, os.path.join(args.data, 'sad_embedding_model.p'))
             best_loss = avg_loss
             patience = 0
         if patience > 2:
@@ -183,7 +226,7 @@ def __main__():
 
     within_group = []
     differing_group = []
-    model = torch.load(read_hotels(os.path.join(args.data, 'sad_embedding_model.p')))
+    model = torch.load(os.path.join(args.data, 'sad_embedding_model.p'))
     model.eval()
 
     positive_samples = random.sample(hotel_dataset.pos_pairs, 100000)
@@ -204,11 +247,14 @@ def __main__():
 
     print(f"diff between sampled groups: {wg - dg}")
 
-    # bins = np.linspace(0, 1, 20)
-    # pyplot.hist(similarity(pos_1, pos_2).detach().cpu().numpy(), bins, alpha=0.8, label='In Context')
-    # pyplot.hist(similarity(neg_1, neg_2).detach().cpu().numpy(), bins, alpha=0.5, label='Out of Contex')
-    # pyplot.legend(loc='upper right')
-    # pyplot.show()
+    bins = np.linspace(0, 1, 20)
+    pyplot.hist(similarity(pos_1, pos_2).detach().cpu().numpy(), bins, alpha=0.8, label='In Context')
+    pyplot.hist(similarity(neg_1, neg_2).detach().cpu().numpy(), bins, alpha=0.5, label='Out of Contex')
+    pyplot.legend(loc='upper center')
+    pyplot.title('Similarity of positive and negative item pairs')
+    pyplot.ylabel('Number of pairs')
+    pyplot.xlabel('Similarity')
+    pyplot.savefig('sim_plot.png')
 
     list_hotels = hotel_dataset.hotels
     list_embeddings = []
@@ -225,4 +271,4 @@ def __main__():
          'embedding': list_embeddings,
         })
 
-    embeddings.to_parquet(read_hotels(os.path.join(args.data, 'embeddings.parquet')))
+    embeddings.to_parquet(os.path.join(args.data, 'embeddings.parquet'))
