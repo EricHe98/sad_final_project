@@ -129,13 +129,14 @@ def __main__():
 
     args = parser.parse_args()
 
+    BATCH_SIZE = 1024
+    EMBEDDING_DIM = 32
+    N_HOTELS = len(hotels)
+
     hotel_dataset = HotelEmbeddingsDataset()
     dataset_loader = torch.utils.data.DataLoader(hotel_dataset,
                                                  batch_size=BATCH_SIZE, shuffle=True)
     hotels = read_hotels(os.path.join(args.data, 'hotels.csv'))
-    BATCH_SIZE = 1024
-    EMBEDDING_DIM = 32
-    N_HOTELS = len(hotels)
 
     # initialize embeddings randomly
     model = EmbeddingModeler(N_HOTELS, EMBEDDING_DIM, with_bias=True)
