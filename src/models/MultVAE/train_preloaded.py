@@ -57,6 +57,19 @@ parser.add_argument('-lt',
                     type = int,
                     help = 'Size of Latent Dimension',
                     default = 200)
+parser.add_argument('-n',
+                    '--model_run_id', 
+                    type = str,
+                    required=True,
+                    help='model_run_id. should be the run_id of all the models in the model_folder',
+                    )
+parser.add_argument('-e',
+                    '--epoch', 
+                    type = int,
+                    required=True,
+                    help='max epoch, the last epoch that you want to validate towards',
+                    default = 0
+                    )
 args = parser.parse_args()
 
 if __name__ == '__main__':
@@ -92,19 +105,15 @@ if __name__ == '__main__':
       mlflow.log_param('hidden_dim', args.hidden_dim)
       mlflow.log_param('latent_dim', args.latent_dim)
       mlflow.log_param('dropout', 0.5)
-      mlflow.log_param('beta', 'annealed_to halfway')
+      mlflow.log_param('beta', 1.0)
       mlflow.log_param('learning_rate', args.learning_rate)
       mlflow.log_param('n_enc_hidden_layers', args.num_layers)
       mlflow.log_param('n_dec_hidden_layers', args.num_layers)
 
-      # train, validate ..
-      model = MultVae(item_dim=hotel_length,
-                      hidden_dim=args.hidden_dim,
-                      latent_dim=args.latent_dim,
-                      n_enc_hidden_layers = args.num_layers,
-                      n_dec_hidden_layers = args.num_layers,
-                      dropout = 0.5
-                     )
+      model_name = 'multvae_{}_annealed_epoch_{}.uri'.format(args.model_run_id,args.epoch)
+      model_path = os.path.join(args.save_path,model_name)
+
+      model = mlflow.pytorch.load_model(model_path)
       model.to(device)
       time_start = dt.datetime.now()
 
@@ -113,9 +122,9 @@ if __name__ == '__main__':
                                                 train_loader=train_loader,
                                                 valid_loader=val_loader,
                                                 device = device,
-                                                start_beta = 0.0,
+                                                start_beta = 1.0,
                                                 max_beta=1.0,
-                                                num_epoch=400,
+                                                num_epoch=450,
                                                 learning_rate=args.learning_rate,
                                                 max_patience=5,
                                                 run_id = run_id,
